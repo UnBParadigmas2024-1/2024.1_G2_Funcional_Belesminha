@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  ubuntu:
+    container_name: ubuntu
+    build: .
+    tty: true
+    volumes:
+      - ./app:/app
