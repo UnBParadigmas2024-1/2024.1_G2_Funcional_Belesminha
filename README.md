@@ -24,8 +24,16 @@ Paradigmas:
 ## Alunos
 |Matrícula | Aluno |
 | -- | -- |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
+|Ailton Aires|180011600|
+|Arthur Sena|180030345|
+|Eric Chagas de Oliveira|180119508|
+|Fernando Vargas|180016491|
+|Gabriel Luiz|190013354|
+|Guilherme Daniel Fernandes da Silva|180018019|
+|Kevin Luis|180042386|
+|Matheus Monteiro|180127969|
+|Thiago Vivan Bastos|190020407|
+|Victor Buendia|190020601|
 
 ## Sobre 
 Descreva o seu projeto em linhas gerais. 
