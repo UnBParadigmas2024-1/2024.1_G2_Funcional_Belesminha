@@ -1,0 +1,10 @@
+[ rows
+	[ columns
+		Cell {north = True, south = True, east = True, west = True, visited = False},
+		Cell {north = True, south = True, east = True, west = True, visited = False}
+	],
+	[
+		Cell {north = True, south = True, east = True, west = True, visited = False},
+		Cell {north = True, south = True, east = True, west = True, visited = False}
+	]
+]

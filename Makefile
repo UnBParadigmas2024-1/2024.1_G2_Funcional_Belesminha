@@ -1,4 +1,4 @@
 .PHONY: init
 init:
-	docker-compose up -d
+	docker-compose up --build -d
 	docker exec -it ubuntu zsh

@@ -1,6 +1,8 @@
 FROM ubuntu:22.04
 RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install ghc cabal-install haskell-stack -y
+RUN apt-get install ghc cabal-install haskell-stack haskell-platform -y
+RUN cabal update
+RUN cabal install --lib random lens
 
 # OH MY ZSH & plugins
 RUN apt install build-essential curl file git -y
