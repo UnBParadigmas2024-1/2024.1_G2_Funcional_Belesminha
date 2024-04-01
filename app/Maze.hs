@@ -95,3 +95,21 @@ getComplementaryDir maze (x, y) dir =
     in if goToNeighbor maze (x,y) opDir == (x, y)
         then None
         else opDir
+
+generateRandomNum :: (Int,Int) -> IO Int
+generateRandomNum (min,max) = randomRIO (min,max)
+
+getCarveDirection :: Directions -> IO (Changer Cell)
+getCarveDirection pos = do
+    case pos of
+        ToUp    -> return (\new_dir -> new_dir { up = True    , visited = True })
+        ToDown  -> return (\new_dir -> new_dir { down = True  , visited = True })
+        ToLeft  -> return (\new_dir -> new_dir { left = True  , visited = True })
+        ToRight -> return (\new_dir -> new_dir { right = True , visited = True })
+        None    -> return (\new_dir -> new_dir { visited = True })
+
+updateMaze :: Maze -> Coord -> Changer Cell -> Maze
+updateMaze maze (x,y) ch =
+    let (a,row:b)  = splitAt x maze
+        (l,cll:r)  = splitAt y row
+    in (a ++ [l ++ (ch cll):r] ++ b)
