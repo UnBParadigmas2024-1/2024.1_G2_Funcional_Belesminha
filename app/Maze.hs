@@ -11,8 +11,8 @@ instance Show Cell where
     show End     = "E"
     show Path    = "S"
 
-printMaze :: Maze -> IO ()
-printMaze maze = mapM_ putStrLn $ map (concatMap showCell) maze
+viewMaze :: Maze -> IO ()
+viewMaze maze = mapM_ putStrLn $ map (concatMap showCell) maze
     where
         showCell Wall   = "■ "
         showCell Path   = "⬚ "
@@ -32,3 +32,9 @@ emptyMaze :: Coord -> Maze
 emptyMaze dimensions = replicate rows $ replicate cols Wall
     where
         (rows,cols) = dimensions
+
+updateMaze :: Maze -> Coord -> Cell -> Maze
+updateMaze maze (x,y) cll = (a ++ [l ++ cll:r] ++ b)
+    where
+        (a,row:b)  = splitAt x maze
+        (l,col:r)  = splitAt y row
