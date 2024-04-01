@@ -24,3 +24,8 @@ emptyMaze rows cols = (replicate rows (replicate cols emptyCell))
         left = False,
         visited = False
     }
+
+inBounds :: Maze -> Coord -> Bool
+inBounds maze (x,y) = 
+    x >= 0 && y >= 0 && x < length (row:rows) && y < length (row)
+    where (row:rows) = maze
