@@ -1,4 +1,5 @@
 module Maze() where
+import System.Random
 
 data Cell = Cell { 
     up :: Bool,
@@ -10,6 +11,7 @@ data Cell = Cell {
 
 type Coord = (Int,Int)
 type Maze = [[Cell]]
+type Changer a = (a -> a)
 
 data Directions =
     ToUp
@@ -113,3 +115,32 @@ updateMaze maze (x,y) ch =
     let (a,row:b)  = splitAt x maze
         (l,cll:r)  = splitAt y row
     in (a ++ [l ++ (ch cll):r] ++ b)
+
+dfs :: Maze -> Coord -> [Coord] -> IO Maze
+dfs maze (x,y) stack = do
+    let neighbors = filter (\(nx,ny) -> not (visited ((maze !! nx) !! ny))) (getNeighbors maze (x,y))
+    let dirs = [findDirection (x,y) (xi,yi) | (xi,yi) <- neighbors]
+    let nstack = if null neighbors then stack else ((x,y):stack)
+
+    let max = if null dirs then 0 else length dirs - 1
+    rn <- generateRandomNum (0,max)
+
+    let pos = if null dirs then None else dirs !! rn
+    dir <- getCarveDirection pos
+
+    let maze' = updateMaze maze (x,y) dir
+    if null nstack
+        then return maze'
+        else 
+            case neighbors of
+                [] -> 
+                    let (h:t) = nstack
+                        (nx,ny) = h
+                    in dfs maze' (nx,ny) t
+                _  -> do
+                    let (nx,ny) = goToNeighbor maze' (x,y) pos
+                    opPos <- getCarveDirection (getComplementaryDir maze' (x,y) pos)
+                    dfs (updateMaze maze' (x,y) opPos) (nx,ny) ((x,y):nstack)
+
+createMaze :: Maze -> IO Maze
+createMaze maze = dfs maze (0,0) []
