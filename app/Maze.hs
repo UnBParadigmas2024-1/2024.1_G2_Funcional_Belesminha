@@ -1,8 +1,4 @@
-module Maze(
-    Cell,
-    Maze,
-    Coord,
-) where
+module Maze() where
 
 data Cell = Cell { 
     up :: Bool,
@@ -12,8 +8,23 @@ data Cell = Cell {
     visited :: Bool
  } deriving (Eq, Show)
 
-type Maze = [[Cell]]
 type Coord = (Int,Int)
+type Maze = [[Cell]]
+
+data Directions =
+    ToUp
+    | ToDown
+    | ToLeft
+    | ToRight
+    | None
+    deriving (Eq)
+
+instance Show Directions where
+    show ToUp    = "Up"
+    show ToDown  = "Down"
+    show ToRight = "Right"
+    show ToLeft  = "Left"
+    show None    = "None"
 
 emptyMaze :: Int -> Int -> Maze
 emptyMaze rows cols = (replicate rows (replicate cols emptyCell))
