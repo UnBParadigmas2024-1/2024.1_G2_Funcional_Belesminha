@@ -62,3 +62,36 @@ findDirection start end
     where
         (x0,y0) = start
         (x1,y1) = end
+
+goToNeighbor :: Maze -> Coord -> Directions -> Coord
+goToNeighbor maze (x,y) dir =
+    let (dx,dy) = directionOffset dir
+        rows = (length maze) - 1
+        cols = (length (maze !! 0)) - 1
+        new_x = if x+dx < 0 then 0 else if x+dx > rows then rows else x+dx
+        new_y = if y+dy < 0 then 0 else if y+dy > cols then cols else y+dy
+    in (new_x,new_y)
+
+directionOffset :: Directions -> Coord
+directionOffset dir =
+    case dir of
+        ToUp    -> (-1,0)
+        ToDown  -> (1, 0)
+        ToRight -> (0, 1)
+        ToLeft  -> (0,-1)
+        None    -> (0, 0)
+
+getOppositeDir :: Directions -> Directions
+getOppositeDir dir
+    | dir == ToUp    = ToDown
+    | dir == ToDown  = ToUp
+    | dir == ToRight = ToLeft
+    | dir == ToLeft  = ToRight
+    | dir == None    = None
+
+getComplementaryDir :: Maze -> Coord -> Directions -> Directions
+getComplementaryDir maze (x, y) dir = 
+    let opDir = getOppositeDir dir
+    in if goToNeighbor maze (x,y) opDir == (x, y)
+        then None
+        else opDir
