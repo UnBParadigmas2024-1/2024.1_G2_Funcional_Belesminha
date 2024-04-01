@@ -1,146 +1,34 @@
 module Maze() where
 import System.Random
 
-data Cell = Cell { 
-    up :: Bool,
-    down :: Bool,
-    right :: Bool,
-    left :: Bool,
-    visited :: Bool
- } deriving (Eq, Show)
-
-type Coord = (Int,Int)
 type Maze = [[Cell]]
-type Changer a = (a -> a)
+type Coord = (Int,Int)
+data Cell = Wall | Path | Start | End deriving (Eq)
 
-data Directions =
-    ToUp
-    | ToDown
-    | ToLeft
-    | ToRight
-    | None
-    deriving (Eq)
+instance Show Cell where
+    show Wall    = "#"
+    show Start   = " "
+    show End     = "E"
+    show Path    = "S"
 
-instance Show Directions where
-    show ToUp    = "Up"
-    show ToDown  = "Down"
-    show ToRight = "Right"
-    show ToLeft  = "Left"
-    show None    = "None"
-
-emptyMaze :: Int -> Int -> Maze
-emptyMaze rows cols = (replicate rows (replicate cols emptyCell))
-    where emptyCell = Cell {
-        up = False,
-        down = False,
-        right = False,
-        left = False,
-        visited = False
-    }
-
-inBounds :: Maze -> Coord -> Bool
-inBounds maze (x,y) = 
-    x >= 0 && y >= 0 && x < length (row:rows) && y < length (row)
-    where (row:rows) = maze
-
-getNeighborsDirections :: Maze -> Coord -> [Directions]
-getNeighborsDirections maze coord = map (findDirection coord) neighbors
+printMaze :: Maze -> IO ()
+printMaze maze = mapM_ putStrLn $ map (concatMap showCell) maze
     where
-        neighbors = getNeighbors maze coord
+        showCell Wall   = "■ "
+        showCell Path   = "⬚ "
+        showCell Start  = "S "
+        showCell End    = "E "
 
-getNeighbors :: Maze -> Coord -> [Coord]
-getNeighbors maze (x,y) = filter (\coords -> (inBounds) maze coords) neighborCoords
+maze =
+    [
+      [Wall, Wall , Wall, Wall, Wall]
+    , [Wall, Start, Path, Path, Wall]
+    , [Wall, Wall , Path, Wall, Wall]
+    , [Wall, Path , Path, Path, Wall]
+    , [Wall, Wall , Wall, End , Wall]
+    ]
+
+emptyMaze :: Coord -> Maze
+emptyMaze dimensions = replicate rows $ replicate cols Wall
     where
-        neighborCoords :: [Coord]
-        neighborCoords = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
-
-findDirection :: Coord -> Coord -> Directions
-findDirection start end
-    | (x1,y1) == (x0-1,y0) = ToUp
-    | (x1,y1) == (x0+1,y0) = ToDown
-    | (x1,y1) == (x0,y0+1) = ToRight
-    | (x1,y1) == (x0,y0-1) = ToLeft
-    | otherwise            = None
-    where
-        (x0,y0) = start
-        (x1,y1) = end
-
-goToNeighbor :: Maze -> Coord -> Directions -> Coord
-goToNeighbor maze (x,y) dir =
-    let (dx,dy) = directionOffset dir
-        rows = (length maze) - 1
-        cols = (length (maze !! 0)) - 1
-        new_x = if x+dx < 0 then 0 else if x+dx > rows then rows else x+dx
-        new_y = if y+dy < 0 then 0 else if y+dy > cols then cols else y+dy
-    in (new_x,new_y)
-
-directionOffset :: Directions -> Coord
-directionOffset dir =
-    case dir of
-        ToUp    -> (-1,0)
-        ToDown  -> (1, 0)
-        ToRight -> (0, 1)
-        ToLeft  -> (0,-1)
-        None    -> (0, 0)
-
-getOppositeDir :: Directions -> Directions
-getOppositeDir dir
-    | dir == ToUp    = ToDown
-    | dir == ToDown  = ToUp
-    | dir == ToRight = ToLeft
-    | dir == ToLeft  = ToRight
-    | dir == None    = None
-
-getComplementaryDir :: Maze -> Coord -> Directions -> Directions
-getComplementaryDir maze (x, y) dir = 
-    let opDir = getOppositeDir dir
-    in if goToNeighbor maze (x,y) opDir == (x, y)
-        then None
-        else opDir
-
-generateRandomNum :: (Int,Int) -> IO Int
-generateRandomNum (min,max) = randomRIO (min,max)
-
-getCarveDirection :: Directions -> IO (Changer Cell)
-getCarveDirection pos = do
-    case pos of
-        ToUp    -> return (\new_dir -> new_dir { up = True    , visited = True })
-        ToDown  -> return (\new_dir -> new_dir { down = True  , visited = True })
-        ToLeft  -> return (\new_dir -> new_dir { left = True  , visited = True })
-        ToRight -> return (\new_dir -> new_dir { right = True , visited = True })
-        None    -> return (\new_dir -> new_dir { visited = True })
-
-updateMaze :: Maze -> Coord -> Changer Cell -> Maze
-updateMaze maze (x,y) ch =
-    let (a,row:b)  = splitAt x maze
-        (l,cll:r)  = splitAt y row
-    in (a ++ [l ++ (ch cll):r] ++ b)
-
-dfs :: Maze -> Coord -> [Coord] -> IO Maze
-dfs maze (x,y) stack = do
-    let neighbors = filter (\(nx,ny) -> not (visited ((maze !! nx) !! ny))) (getNeighbors maze (x,y))
-    let dirs = [findDirection (x,y) (xi,yi) | (xi,yi) <- neighbors]
-    let nstack = if null neighbors then stack else ((x,y):stack)
-
-    let max = if null dirs then 0 else length dirs - 1
-    rn <- generateRandomNum (0,max)
-
-    let pos = if null dirs then None else dirs !! rn
-    dir <- getCarveDirection pos
-
-    let maze' = updateMaze maze (x,y) dir
-    if null nstack
-        then return maze'
-        else 
-            case neighbors of
-                [] -> 
-                    let (h:t) = nstack
-                        (nx,ny) = h
-                    in dfs maze' (nx,ny) t
-                _  -> do
-                    let (nx,ny) = goToNeighbor maze' (x,y) pos
-                    opPos <- getCarveDirection (getComplementaryDir maze' (x,y) pos)
-                    dfs (updateMaze maze' (x,y) opPos) (nx,ny) ((x,y):nstack)
-
-createMaze :: Maze -> IO Maze
-createMaze maze = dfs maze (0,0) []
+        (rows,cols) = dimensions
