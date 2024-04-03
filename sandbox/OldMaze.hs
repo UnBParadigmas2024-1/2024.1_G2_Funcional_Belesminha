@@ -173,3 +173,16 @@ printMaze maze = do
             putStr " "
             putStr $ if down cell then "  " else "--"
             putStr " "
+
+
+printMazeSize :: Maze -> IO ()
+printMazeSize maze = do
+    let rows = length maze
+    let cols = length $ head maze
+    putStrLn $ "Rows: " ++ show rows ++ " Cols: " ++ show cols
+    -- Now we need to generate based on number of leaves the random positions of the maze
+    leaves <- generateLeaves maze
+    -- print leaves
+    -- Now we need to update the maze with the leaves
+    let mazeWithLeaves = foldl (\mz (x,y) -> updateMaze mz (x,y) Leaf) maze leaves
+    viewMaze mazeWithLeaves

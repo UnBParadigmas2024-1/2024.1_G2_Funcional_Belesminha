@@ -1,4 +1,4 @@
-module Maze(Maze) where
+module Maze(Maze, updateMaze, generateLeaves) where
 import System.Random ( randomRIO )
 import Map(mazeMap,Cell(..))
 
@@ -8,10 +8,11 @@ type Coord = (Int,Int)
 viewMaze :: Maze -> IO ()
 viewMaze maze = mapM_ putStrLn $ map (concatMap showCell) maze
     where
-        showCell Wall   = "■ "
-        showCell Path   = "⬚ "
+        showCell Wall   = "W "
+        showCell Path   = "P "
         showCell Start  = "S "
         showCell End    = "E "
+        showCell Leaf   = "L "
 
 emptyMaze :: Coord -> Maze
 emptyMaze dimensions = replicate rows $ replicate cols Wall
@@ -39,3 +40,20 @@ randomElem :: [a] -> IO a
 randomElem xs = do
         i <- randomRIO (0, length xs - 1)
         return $ xs !! i
+
+numberOfLeaves :: Int
+numberOfLeaves = 10
+
+generateLeaf :: Maze -> IO Coord
+generateLeaf maze = do
+    let numRows = length maze
+        numCols = length (head maze)
+    x <- randomRIO (1, numRows - 1)
+    y <- randomRIO (1, numCols - 1)
+    if maze !! x !! y == Path
+        then return (x, y)
+        else generateLeaf maze
+
+generateLeaves :: Maze -> IO [Coord]
+generateLeaves maze = sequence $ replicate numberOfLeaves (generateLeaf maze)
+    
