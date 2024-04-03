@@ -1,4 +1,4 @@
-module Maze() where
+module Maze(Maze) where
 import System.Random ( randomRIO )
 import Map(mazeMap,Cell(..))
 
