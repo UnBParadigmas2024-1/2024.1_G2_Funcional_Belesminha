@@ -35,12 +35,19 @@ mazeMap =
         ,[Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall]
     ]
     
-
+permutation :: [Position] -> [[Position]]
+permutation [] = [[]]
+permutation xs = [ x:ys | x <- xs, ys <- permutation (delete x xs)]
+      where
+        delete :: Position -> [Position] -> [Position]
+        delete _ [] = []
+        delete y (x:xs)
+          | y == x   = delete y xs
+          | otherwise = x : delete y xs
 
 -- Retorna a lista de vizinhos válidos de uma posição
 getValidNeighbors :: Position -> [[Cell]] -> [Position]
 getValidNeighbors (x, y) maze = filter (\(x', y') -> x' >= 0 && y' >= 0 && x' < length maze && y' < length (head maze) && maze !! x' !! y' /= Wall) [(x, y + 1), (x, y - 1), (x + 1, y), (x - 1, y)]
-
 
 -- Algoritmo de Dijkstra
 dijkstra :: Position -> Position -> [[Cell]] -> Maybe [Position]
@@ -55,12 +62,26 @@ dijkstra start end maze = dijkstra' (Set.singleton (0, start, [start])) Set.empt
                 else let neighbors = getValidNeighbors pos maze in
                     dijkstra' (foldl' (\acc neighbor -> Set.insert (cost + 1, neighbor, path ++ [neighbor]) acc) pq' neighbors) (Set.insert pos visited)
 
+-- Função para encontrar o caminho de start até um destino específico
+findPathToDestination :: Position -> Position -> [[Cell]] -> Maybe [Position]
+findPathToDestination start end maze = dijkstra start end maze
+
+-- Função para calcular o caminho total passando por todas as frutas
+calculateFullPath :: Position -> [Position] -> Position -> [[Cell]] -> Maybe [Position]
+-- Se não houver frutas, calcula o caminho direto de start até end
+calculateFullPath start [] end maze = findPathToDestination start end maze
+calculateFullPath start (fruta:outrasFrutas) end maze = do
+    pathToFruta <- findPathToDestination start fruta maze
+    pathToRest <- calculateFullPath fruta outrasFrutas end maze
+    return (pathToFruta ++ pathToRest)
+
 main :: IO ()
 main = do
-  let frutas = [(5, 2), (13, 7), (20, 9)] -- Ou qualquer outra lista de frutas que você deseja testar
-  let start = (1, 1)
-  let end = (21, 22)
-  let path = dijkstra start (5, 2) mazeMap
-  case path of
-    Just p -> putStrLn $ "Caminho: " ++ show p
-    Nothing -> putStrLn "Não foi possível encontrar um caminho"
+    let frutas = [(5, 2), (13, 7), (20, 9)] -- Ou qualquer outra lista de frutas que você deseja testar
+    let start = (1, 1)
+    let end = (21, 22)
+    let frutasPermutations = permutation frutas
+    let allCaminhos =  map (\frutasPermutation -> calculateFullPath start frutasPermutation end mazeMap) frutasPermutations
+    print allCaminhos
+    
+   
