@@ -73,7 +73,7 @@ calculateFullPath start [] end maze = findPathToDestination start end maze
 calculateFullPath start (fruta:outrasFrutas) end maze = do
     pathToFruta <- findPathToDestination start fruta maze
     pathToRest <- calculateFullPath fruta outrasFrutas end maze
-    return (pathToFruta ++ pathToRest)
+    return (pathToFruta ++ tail pathToRest)
 
 main :: IO ()
 main = do
