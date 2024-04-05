@@ -47,8 +47,9 @@ numberOfLeaves = 10
 
 generateLeaf :: Maze -> IO Coord
 generateLeaf maze = do
-    let numRows = length maze
-        numCols = length (head maze)
+    let (x:xs)  = maze
+        numRows = length maze
+        numCols = length x
     x <- randomRIO (1, numRows - 1)
     y <- randomRIO (1, numCols - 1)
     if maze !! x !! y == Path
