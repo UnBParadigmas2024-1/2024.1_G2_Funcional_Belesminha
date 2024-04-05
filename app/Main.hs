@@ -4,6 +4,7 @@ import Graphics.Gloss.Interface.IO.Game (Event(..), KeyState(..), Key(..))
 import Map (mazeMap, Cell(..))
 import Maze (Maze, generateLeaves, updateMaze)
 
+
 cellSize :: Float
 cellSize = 20
 
@@ -32,6 +33,14 @@ mazeToPicture world =
 handleInput :: Event -> World -> World
 handleInput (EventKey (Char 'r') Down _ _) world = sampleWorld mazeMap
 handleInput _ world = world
+
+handleInput :: Event -> World -> World
+handleInput (EventKey (Char 'r') Down _ _) world = do
+    putStrLn "Restarting..."
+    -- Lógica de reinício do jogo
+    return world  -- ou return novoEstadoDoMundo, dependendo da lógica do jogo
+handleInput _ world = return world
+
 
 main :: IO ()
 main = do
