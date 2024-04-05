@@ -5,6 +5,7 @@ import Map ( mazeMap, Cell(..) )
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Interact (Event)
 import Maze ( Maze, generateLeaves, updateMaze )
+import System.IO.Unsafe (unsafePerformIO)
 
 
 cellSize :: Float
@@ -44,7 +45,5 @@ mazeToPicture world =
     ]
 
 handleInput :: Event -> World -> World
-handleInput (EventKey (Char 'r') Down _ _) world =
-    let maze = worldMap world
-    in world { worldMap = updateMaze maze (0,0) Path }
+handleInput (EventKey (Char 'r') Down _ _) _ = unsafePerformIO initializeWorld
 handleInput _ world = world
