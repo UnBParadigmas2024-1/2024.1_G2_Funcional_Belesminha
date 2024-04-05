@@ -1,6 +1,7 @@
 module Maze(Maze, updateMaze, generateLeaves) where
 import System.Random ( randomRIO )
 import Map(mazeMap,Cell(..))
+import Control.Monad (replicateM)
 
 type Maze = [[Cell]]
 type Coord = (Int,Int)
@@ -55,4 +56,4 @@ generateLeaf maze = do
         else generateLeaf maze
 
 generateLeaves :: Maze -> IO [Coord]
-generateLeaves maze = sequence $ replicate numberOfLeaves (generateLeaf maze)
+generateLeaves maze = Control.Monad.replicateM numberOfLeaves (generateLeaf maze)
