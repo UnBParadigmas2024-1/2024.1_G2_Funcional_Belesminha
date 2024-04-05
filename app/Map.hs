@@ -1,5 +1,5 @@
 module Map(Cell(..),mazeMap) where
-data Cell = Wall | Path | Start | Leaf | End deriving (Eq) 
+data Cell = Wall | Path | Start | Leaf | End deriving (Eq)
 instance Show Cell where
     show Wall    = "#"
     show Start   = "S"

@@ -6,7 +6,7 @@ type Maze = [[Cell]]
 type Coord = (Int,Int)
 
 viewMaze :: Maze -> IO ()
-viewMaze maze = mapM_ putStrLn $ map (concatMap showCell) maze
+viewMaze = mapM_ (putStrLn . concatMap showCell)
     where
         showCell Wall   = "W "
         showCell Path   = "P "
@@ -56,4 +56,3 @@ generateLeaf maze = do
 
 generateLeaves :: Maze -> IO [Coord]
 generateLeaves maze = sequence $ replicate numberOfLeaves (generateLeaf maze)
-    
