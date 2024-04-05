@@ -20,7 +20,7 @@ emptyMaze dimensions = replicate rows $ replicate cols Wall
         (rows,cols) = dimensions
 
 updateMaze :: Maze -> Coord -> Cell -> Maze
-updateMaze maze (x,y) cll = (a ++ [l ++ cll:r] ++ b)
+updateMaze maze (x,y) cll = a ++ [l ++ cll:r] ++ b
     where
         (a,row:b)  = splitAt x maze
         (l,col:r)  = splitAt y row
