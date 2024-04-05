@@ -46,4 +46,5 @@ mazeToPicture world =
 
 handleInput :: Event -> World -> World
 handleInput (EventKey (Char 'r') Down _ _) _ = unsafePerformIO initializeWorld
+handleInput (EventKey (Char 'q') Down _ _) _ = error "Bye!"
 handleInput _ world = world
