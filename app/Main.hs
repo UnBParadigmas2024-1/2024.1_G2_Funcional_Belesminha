@@ -18,12 +18,11 @@ sampleWorld maze = World {
     worldMap = maze
 }
 
-data World = World {
-    worldMap :: Maze
-}
+data World where
+  World :: {worldMap :: Maze} -> World
 
 mazeToPicture :: World -> Picture
-mazeToPicture world = 
+mazeToPicture world =
     let maze = worldMap world
         reversedMaze = reverse maze
     in translate (-240) (-225) . pictures $
