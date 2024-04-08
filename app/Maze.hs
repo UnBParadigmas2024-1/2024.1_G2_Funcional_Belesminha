@@ -98,7 +98,8 @@ goToNeighbor maze (x,y) dir =
         cols = (length (maze !! 0)) - 1
         new_x = if x+dx < 0 then 0 else if x+dx > rows then rows else x+dx
         new_y = if y+dy < 0 then 0 else if y+dy > cols then cols else y+dy
-    in (new_x,new_y)
+        newCoord = if maze !! new_x !! new_y == Wall then (x, y) else (new_x, new_y)
+    in newCoord
 
 directionOffset :: Directions -> Coord
 directionOffset dir =
