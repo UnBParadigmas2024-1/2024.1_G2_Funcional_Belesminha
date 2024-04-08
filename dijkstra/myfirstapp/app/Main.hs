@@ -77,11 +77,16 @@ calculateFullPath start (fruta:outrasFrutas) end maze = do
 
 main :: IO ()
 main = do
-    let frutas = [(5, 2), (13, 7), (20, 9)] -- Ou qualquer outra lista de frutas que você deseja testar
+    let frutas = [ (13, 7),(5, 2), (20, 9)] -- Ou qualquer outra lista de frutas que você deseja testar
     let start = (1, 1)
     let end = (21, 22)
     let frutasPermutations = permutation frutas
     let allCaminhos =  map (\frutasPermutation -> calculateFullPath start frutasPermutation end mazeMap) frutasPermutations
-    print allCaminhos
+    let allCaminhos' = map fromJust allCaminhos
+    let menorCaminho = minimumBy (compare `on` length) allCaminhos'
+    print menorCaminho
+    print $ length menorCaminho
+    -- print $ length $ minimumBy (compare `on` length) allCaminhos'
+    -- print allCaminhos
     
    
