@@ -75,6 +75,14 @@ calculateFullPath start (fruta:outrasFrutas) end maze = do
     pathToRest <- calculateFullPath fruta outrasFrutas end maze
     return (pathToFruta ++ tail pathToRest)
 
+calculateMinSteps :: Position -> Position -> [Position] -> [[Cell]] -> [Position]
+calculateMinSteps startPos endPos fruits maze =
+    let fpermutations = permutation fruits
+        allPaths = map (\fruitPermut -> calculateFullPath startPos fruitPermut endPos maze) fpermutations
+        allPaths' = map fromJust allPaths
+        minPath = minimumBy (compare `on` length) allPaths'
+        in minPath
+
 main :: IO ()
 main = do
     let frutas = [ (13, 7),(5, 2), (20, 9)] -- Ou qualquer outra lista de frutas que você deseja testar
