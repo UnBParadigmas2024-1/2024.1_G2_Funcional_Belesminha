@@ -1,4 +1,4 @@
-module Main where
+module Dijkstra where
 import qualified Data.Set as Set
 import Data.Maybe (fromJust)
 import Data.List (minimumBy, foldl')
