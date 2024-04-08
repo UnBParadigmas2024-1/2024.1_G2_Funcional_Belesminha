@@ -23,4 +23,5 @@ if [ "$OSTYPE" = "Linux" ] || [ "$OSTYPE" = "Darwin" ]; then
     cabal update
     cabal install --lib gloss
     cabal install --lib random
+    cabal install --lib containers
 fi
