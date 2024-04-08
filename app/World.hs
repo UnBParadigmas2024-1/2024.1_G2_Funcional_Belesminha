@@ -10,7 +10,7 @@ import Graphics.Gloss.Interface.Pure.Game
       Key(SpecialKey),
       KeyState(Down, Up),
       SpecialKey(KeyRight, KeyUp, KeyDown, KeyLeft) )
-import Maze ( Maze, generateLeaves, updateMaze, startCoord, incrementS, incrementW, incrementA, incrementD )
+import Maze ( Maze, generateLeaves, updateMaze, startCoord, incrementS, incrementW, incrementA, incrementD, Coord )
 import System.IO.Unsafe (unsafePerformIO)
 
 cellSize :: Float
@@ -29,7 +29,8 @@ initializeWorld = do
     leaves <- generateLeaves initialMaze
     let mazeWithLeaves = foldl (\mz (x,y) -> updateMaze mz (x,y) Leaf) initialMaze leaves
         newWorld = World {
-            worldMap = mazeWithLeaves
+            worldMap = mazeWithLeaves,
+            currentStartCoord = (1, 1)
         }
     return newWorld
 
@@ -37,7 +38,7 @@ sampleWorld :: Maze -> World
 sampleWorld maze = World {worldMap = maze}
 
 data World where
-  World :: {worldMap :: Maze} -> World
+  World :: {worldMap :: Maze, currentStartCoord :: Coord } -> World
 
 mazeToPicture :: World -> Picture
 mazeToPicture world =
@@ -52,8 +53,30 @@ mazeToPicture world =
 handleInput :: Event -> World -> World
 handleInput (EventKey (Char 'r') Down _ _) _ = unsafePerformIO initializeWorld
 -- handleInput (EventKey (Char 'q') Down _ _) _ = updateMaze mazeMap incrementS Start
-handleInput (EventKey (SpecialKey KeyUp) Down _ _) (World world) = World (updateMaze mazeMap (incrementW startCoord) Start)
-handleInput (EventKey (SpecialKey KeyLeft) Down _ _) (World world) = World (updateMaze mazeMap (incrementA startCoord) Start)
-handleInput (EventKey (SpecialKey KeyDown) Down _ _) (World world) = World (updateMaze mazeMap (incrementS startCoord) Start)
-handleInput (EventKey (SpecialKey KeyRight) Down _ _) (World world) = World (updateMaze mazeMap (incrementD startCoord) Start)
+handleInput (EventKey (SpecialKey KeyUp) Down _ _)  world =
+  let currentMaze = mazeMap
+      currentStartCoord = startCoord
+      newMaze = updateMaze currentMaze (incrementW currentStartCoord) Start
+  in World { worldMap = newMaze, currentStartCoord = currentStartCoord }
+
+-- handleInput (EventKey (SpecialKey KeyDown) Down _ _)  world =
+--   let currentMaze = mazeMap
+--       currentStartCoord = currentStartCoord
+--       newMaze = updateMaze currentMaze (incrementS currentStartCoord) Start
+--   in World { worldMap = newMaze, currentStartCoord = currentStartCoord }
+
+handleInput (EventKey (SpecialKey KeyDown) Down _ _)  world =
+  let currentMaze = mazeMap
+      currentStartPos = currentStartCoord world
+      newMaze = updateMaze currentMaze (incrementS currentStartPos) Start
+  in World { worldMap = newMaze, currentStartCoord = currentStartPos }
+
+handleInput (EventKey (SpecialKey KeyRight) Down _ _)  world =
+  let currentMaze = mazeMap
+      currentStartCoord = startCoord
+      newMaze = updateMaze currentMaze (incrementD currentStartCoord) Start
+  in World { worldMap = newMaze, currentStartCoord = currentStartCoord }
+-- handleInput (EventKey (SpecialKey KeyLeft) Down _ _) (World world) = World (updateMaze mazeMap (incrementA startCoord) Start)
+-- handleInput (EventKey (SpecialKey KeyDown) Down _ _) (World world) = World (updateMaze mazeMap (incrementS startCoord) Start)
+-- handleInput (EventKey (SpecialKey KeyRight) Down _ _) (World world) = World (updateMaze mazeMap (incrementD startCoord) Start)
 handleInput _ world = world
