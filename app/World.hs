@@ -12,7 +12,7 @@ import Graphics.Gloss.Interface.Pure.Game
       Key(SpecialKey),
       KeyState(Down, Up),
       SpecialKey(KeyRight, KeyUp, KeyDown, KeyLeft) )
-import Maze ( Maze, generateLeaves, updateMaze, startCoord, incrementS, incrementW, incrementA, incrementD, Coord )
+import Maze ( Maze, generateLeaves, updateMaze, startCoord, incrementS, incrementW, incrementA, incrementD, Coord, Directions(..), goToNeighbor )
 import System.IO.Unsafe (unsafePerformIO)
 
 cellSize :: Float
@@ -32,7 +32,7 @@ initializeWorld maze = do
     let mazeWithLeaves = foldl (\mz (x,y) -> updateMaze mz (x,y) Leaf) initialMaze leaves
         newWorld = World {
             worldMap = mazeWithLeaves,
-            currentStartCoord = (1, 1)
+            playerPos = (1, 1)
         }
     return newWorld
 
@@ -40,7 +40,8 @@ sampleWorld :: Maze -> World
 sampleWorld maze = World {worldMap = maze}
 
 data World where
-  World :: {worldMap :: Maze, currentStartCoord :: Coord } -> World
+  World :: {worldMap :: Maze,
+            playerPos :: Coord} -> World
 
 mazeToPicture :: World -> Picture
 mazeToPicture world =
@@ -52,35 +53,25 @@ mazeToPicture world =
     , (x, cell) <- zip [0..] row
     ]
 
-handleInput :: Event -> World -> World
+-- handleInput :: Event -> World -> World
 -- handleInput (EventKey (Char 'r') Down _ _) _ = unsafePerformIO initializeWorld
 -- handleInput (EventKey (Char 'q') Down _ _) _ = updateMaze mazeMap incrementS Start
-handleInput (EventKey (SpecialKey KeyUp) Down _ _)  world =
-  let currentMaze = mazeMap
-      currentStartCoord = startCoord
-      newMaze = updateMaze currentMaze (incrementW currentStartCoord) Start
-  in World { worldMap = newMaze, currentStartCoord = currentStartCoord }
 
--- handleInput (EventKey (SpecialKey KeyDown) Down _ _)  world =
---   let currentMaze = mazeMap
---       currentStartCoord = currentStartCoord
---       newMaze = updateMaze currentMaze (incrementS currentStartCoord) Start
---   in World { worldMap = newMaze, currentStartCoord = currentStartCoord }
-
+handleInput :: Event -> World -> World
 handleInput (EventKey (SpecialKey KeyDown) Down _ _)  world =
-  let currentMaze = worldMap world
-      currentStartPos = currentStartCoord world
-      newPos = (incrementS currentStartPos)
-      newMaze = updateMaze currentMaze newPos Start
-      newMaze' = updateMaze newMaze currentStartPos Path
-  in World { worldMap = newMaze', currentStartCoord = newPos }
-
+    World { worldMap = updateMaze (updateMaze (worldMap world) (playerPos world) Path) 
+                        (goToNeighbor (worldMap world) (playerPos world) ToDown) Start,
+                        playerPos = (goToNeighbor (worldMap world) (playerPos world) ToDown) }
+handleInput (EventKey (SpecialKey KeyUp) Down _ _)  world =
+    World { worldMap = updateMaze (updateMaze (worldMap world) (playerPos world) Path) 
+                        (goToNeighbor (worldMap world) (playerPos world) ToUp) Start,
+                        playerPos = (goToNeighbor (worldMap world) (playerPos world) ToUp) }
+handleInput (EventKey (SpecialKey KeyLeft) Down _ _)  world =
+    World { worldMap = updateMaze (updateMaze (worldMap world) (playerPos world) Path) 
+                        (goToNeighbor (worldMap world) (playerPos world) ToLeft) Start,
+                        playerPos = (goToNeighbor (worldMap world) (playerPos world) ToLeft) }
 handleInput (EventKey (SpecialKey KeyRight) Down _ _)  world =
-  let currentMaze = mazeMap
-      currentStartCoord = startCoord
-      newMaze = updateMaze currentMaze (incrementD currentStartCoord) Start
-  in World { worldMap = newMaze, currentStartCoord = currentStartCoord }
--- handleInput (EventKey (SpecialKey KeyLeft) Down _ _) (World world) = World (updateMaze mazeMap (incrementA startCoord) Start)
--- handleInput (EventKey (SpecialKey KeyDown) Down _ _) (World world) = World (updateMaze mazeMap (incrementS startCoord) Start)
--- handleInput (EventKey (SpecialKey KeyRight) Down _ _) (World world) = World (updateMaze mazeMap (incrementD startCoord) Start)
+    World { worldMap = updateMaze (updateMaze (worldMap world) (playerPos world) Path) 
+                        (goToNeighbor (worldMap world) (playerPos world) ToRight) Start,
+                        playerPos = (goToNeighbor (worldMap world) (playerPos world) ToRight) }
 handleInput _ world = world

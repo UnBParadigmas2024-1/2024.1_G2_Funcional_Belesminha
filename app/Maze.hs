@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use elemIndex" #-}
 {-# LANGUAGE BlockArguments #-}
-module Maze(Maze, updateMaze, generateLeaves, startCoord, incrementS, incrementA, incrementW, incrementD, Coord ) where
+module Maze(Maze, updateMaze, generateLeaves, startCoord, incrementS, incrementA, incrementW, incrementD, Coord, Directions(..), goToNeighbor) where
 import System.Random ( randomRIO )
 import Map(mazeMap,Cell(..))
 import Control.Monad (replicateM)
