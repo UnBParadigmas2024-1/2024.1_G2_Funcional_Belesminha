@@ -11,6 +11,14 @@ import Data.Maybe (fromMaybe)
 type Maze = [[Cell]]
 type Coord = (Int,Int)
 
+data Directions =
+    ToUp
+    | ToDown
+    | ToLeft
+    | ToRight
+    | None
+    deriving (Eq)
+
 viewMaze :: Maze -> IO ()
 viewMaze = mapM_ (putStrLn . concatMap showCell)
     where
@@ -82,3 +90,21 @@ generateLeaf maze = do
 
 generateLeaves :: Maze -> IO [Coord]
 generateLeaves maze = Control.Monad.replicateM numberOfLeaves (generateLeaf maze)
+
+goToNeighbor :: Maze -> Coord -> Directions -> Coord
+goToNeighbor maze (x,y) dir =
+    let (dx,dy) = directionOffset dir
+        rows = (length maze) - 1
+        cols = (length (maze !! 0)) - 1
+        new_x = if x+dx < 0 then 0 else if x+dx > rows then rows else x+dx
+        new_y = if y+dy < 0 then 0 else if y+dy > cols then cols else y+dy
+    in (new_x,new_y)
+
+directionOffset :: Directions -> Coord
+directionOffset dir =
+    case dir of
+        ToUp    -> (-1,0)
+        ToDown  -> (1, 0)
+        ToRight -> (0, 1)
+        ToLeft  -> (0,-1)
+        None    -> (0, 0)

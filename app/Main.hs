@@ -28,9 +28,9 @@ data World = World {worldMap :: Maze}
 main :: IO ()
 main = do
   let initialMaze = mazeMap
-  leaves <- generateLeaves initialMaze
-  newWorld <- initializeWorld
-  let mazeWithLeaves = foldl (\mz (x, y) -> updateMaze mz (x, y) Leaf) initialMaze leaves
+-- leaves <- generateLeaves initialMaze
+  newWorld <- initializeWorld mazeMap
+--  let mazeWithLeaves = foldl (\mz (x, y) -> updateMaze mz (x, y) Leaf) initialMaze leaves
   play
     (InWindow "Belesminha" (600, 600) (0, 0))
     white

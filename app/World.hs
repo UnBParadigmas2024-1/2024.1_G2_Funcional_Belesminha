@@ -1,3 +1,5 @@
+{-# LANGUAGE GADTs #-}
+
 module World where
 
 import Graphics.Gloss.Interface.IO.Game (Event(..), KeyState(..), Key(..))
@@ -23,9 +25,9 @@ cellToPicture Start = color green $ rectangleSolid cellSize cellSize
 cellToPicture End = color red $ rectangleSolid cellSize cellSize
 cellToPicture Leaf = color orange $ rectangleSolid cellSize cellSize
 
-initializeWorld :: IO World
-initializeWorld = do
-    let initialMaze = mazeMap
+initializeWorld :: Maze -> IO World
+initializeWorld maze = do
+    let initialMaze = maze
     leaves <- generateLeaves initialMaze
     let mazeWithLeaves = foldl (\mz (x,y) -> updateMaze mz (x,y) Leaf) initialMaze leaves
         newWorld = World {
@@ -51,7 +53,7 @@ mazeToPicture world =
     ]
 
 handleInput :: Event -> World -> World
-handleInput (EventKey (Char 'r') Down _ _) _ = unsafePerformIO initializeWorld
+-- handleInput (EventKey (Char 'r') Down _ _) _ = unsafePerformIO initializeWorld
 -- handleInput (EventKey (Char 'q') Down _ _) _ = updateMaze mazeMap incrementS Start
 handleInput (EventKey (SpecialKey KeyUp) Down _ _)  world =
   let currentMaze = mazeMap
@@ -66,11 +68,12 @@ handleInput (EventKey (SpecialKey KeyUp) Down _ _)  world =
 --   in World { worldMap = newMaze, currentStartCoord = currentStartCoord }
 
 handleInput (EventKey (SpecialKey KeyDown) Down _ _)  world =
-  let currentMaze = mazeMap
+  let currentMaze = worldMap world
       currentStartPos = currentStartCoord world
       newPos = (incrementS currentStartPos)
       newMaze = updateMaze currentMaze newPos Start
-  in World { worldMap = newMaze, currentStartCoord = newPos }
+      newMaze' = updateMaze newMaze currentStartPos Path
+  in World { worldMap = newMaze', currentStartCoord = newPos }
 
 handleInput (EventKey (SpecialKey KeyRight) Down _ _)  world =
   let currentMaze = mazeMap
