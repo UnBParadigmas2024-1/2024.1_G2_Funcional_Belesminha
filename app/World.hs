@@ -68,8 +68,9 @@ handleInput (EventKey (SpecialKey KeyUp) Down _ _)  world =
 handleInput (EventKey (SpecialKey KeyDown) Down _ _)  world =
   let currentMaze = mazeMap
       currentStartPos = currentStartCoord world
-      newMaze = updateMaze currentMaze (incrementS currentStartPos) Start
-  in World { worldMap = newMaze, currentStartCoord = currentStartPos }
+      newPos = (incrementS currentStartPos)
+      newMaze = updateMaze currentMaze newPos Start
+  in World { worldMap = newMaze, currentStartCoord = newPos }
 
 handleInput (EventKey (SpecialKey KeyRight) Down _ _)  world =
   let currentMaze = mazeMap

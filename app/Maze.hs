@@ -7,7 +7,6 @@ import Map(mazeMap,Cell(..))
 import Control.Monad (replicateM)
 import Data.List (findIndex)
 import Data.Maybe (fromMaybe)
-import Control.Monad.State (execState, State, MonadState (get, put))
 
 type Maze = [[Cell]]
 type Coord = (Int,Int)
