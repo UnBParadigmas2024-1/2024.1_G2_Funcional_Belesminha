@@ -1,10 +1,11 @@
-module Dijkstra(calculateMinSteps) where
+module Dijkstra(calculateMinSteps, endPos, startPos) where
 import qualified Data.Set as Set
 import Data.Maybe (fromJust)
 import Data.List (minimumBy, foldl')
 import Data.Function (on)
 import Map ( mazeMap, Cell(Leaf, Wall) )
 import Maze (Coord)
+import World (World(..))
 
 type Position = (Int, Int)
 
@@ -48,26 +49,12 @@ calculateFullPath start (fruta:outrasFrutas) end maze = do
     pathToRest <- calculateFullPath fruta outrasFrutas end maze
     return (pathToFruta ++ tail pathToRest)
 
-calculateMinSteps :: Position -> Position -> [Position] -> [[Cell]] -> IO [Position]
-calculateMinSteps startPos endPos leaves maze =
+calculateMinSteps :: World -> [Position] -> [[Cell]] -> IO [Position]
+calculateMinSteps world leaves maze =
     let fpermutations = permutation leaves
-        allPaths = map (\fruitPermut -> calculateFullPath startPos fruitPermut endPos maze) fpermutations
+        startPos' = startPos world
+        endPos' = endPos world
+        allPaths = map (\fruitPermut -> calculateFullPath startPos' fruitPermut endPos' maze) fpermutations
         allPaths' = map fromJust allPaths
         minPath = minimumBy (compare `on` length) allPaths'
         in return minPath
-
-main :: IO ()
-main = do
-    let frutas = [ (13, 7),(5, 2), (20, 9)] -- Ou qualquer outra lista de frutas que você deseja testar
-    let start = (1, 1)
-    let end = (21, 22)
-    let frutasPermutations = permutation frutas
-    let allCaminhos =  map (\frutasPermutation -> calculateFullPath start frutasPermutation end mazeMap) frutasPermutations
-    let allCaminhos' = map fromJust allCaminhos
-    let menorCaminho = minimumBy (compare `on` length) allCaminhos'
-    print menorCaminho
-    print $ length menorCaminho
-    -- print $ length $ minimumBy (compare `on` length) allCaminhos'
-    -- print allCaminhos
-    
-   

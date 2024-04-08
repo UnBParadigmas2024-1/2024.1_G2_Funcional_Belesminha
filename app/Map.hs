@@ -1,5 +1,7 @@
 module Map(Cell(..),mazeMap) where
-data Cell = Wall | Path | Start | Leaf | End deriving (Eq)
+data Cell = MinStep | Wall | Path | Start | Leaf | End deriving (Eq)
+
+-- cellToPicture (MinStep n) = color (makeColor 0.5 0.5 0.5 1) $ rectangleSolid cellSize cellSize
 instance Show Cell where
     show Wall    = "#"
     show Start   = "S"
