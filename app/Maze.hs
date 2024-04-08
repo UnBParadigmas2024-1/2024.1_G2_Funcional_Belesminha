@@ -1,7 +1,13 @@
-module Maze(Maze, updateMaze, generateLeaves) where
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use elemIndex" #-}
+{-# LANGUAGE BlockArguments #-}
+module Maze(Maze, updateMaze, generateLeaves, startCoord, incrementS, incrementA, incrementW, incrementD ) where
 import System.Random ( randomRIO )
 import Map(mazeMap,Cell(..))
 import Control.Monad (replicateM)
+import Data.List (findIndex)
+import Data.Maybe (fromMaybe)
+import Control.Monad.State (execState, State, MonadState (get, put))
 
 type Maze = [[Cell]]
 type Coord = (Int,Int)
@@ -15,6 +21,36 @@ viewMaze = mapM_ (putStrLn . concatMap showCell)
         showCell End    = "E "
         showCell Leaf   = "L "
 
+findStart :: Maze -> Maybe Coord
+findStart maze = findStart' maze 0
+ where
+    findStart' :: Maze -> Int -> Maybe Coord
+    findStart' [] _ = Nothing
+    findStart' (row:rows) rowIndex =
+        case findIndex (==Start) row of
+            Just colIndex -> Just (colIndex, rowIndex)
+            Nothing -> findStart' rows (rowIndex + 1)
+
+-- Start Coord
+startCoord :: Coord
+startCoord = fromMaybe (0, 0) (findStart mazeMap)
+
+-- Increment S
+incrementS :: Coord -> Coord
+incrementS (y, x) = (y + 2, x)
+
+-- Increment W 
+incrementW :: Coord -> Coord
+incrementW (y, x) = (y - 2, x)
+
+-- Increment A
+incrementA :: Coord -> Coord
+incrementA (y, x) = (y, x - 2)
+
+-- Increment D
+incrementD :: Coord -> Coord
+incrementD (y, x) = (y, x + 2)
+
 emptyMaze :: Coord -> Maze
 emptyMaze dimensions = replicate rows $ replicate cols Wall
     where
@@ -25,17 +61,6 @@ updateMaze maze (x,y) cll = a ++ [l ++ cll:r] ++ b
     where
         (a,row:b)  = splitAt x maze
         (l,col:r)  = splitAt y row
-
-getNeighbors :: Maze -> Coord -> [Coord]
-getNeighbors maze (x,y) = filter (inBounds maze) neighborCoords
-    where
-        neighborCoords :: [Coord]
-        neighborCoords = [(x-1,y),(x+1,y),(x,y-1),(x,y+1)]
-
-        inBounds :: Maze -> Coord -> Bool
-        inBounds maze (x,y) = x >= 0 && y >= 0 && x < length maze && y < length cols
-            where
-                (cols:rows) = maze
 
 randomElem :: [a] -> IO a
 randomElem xs = do

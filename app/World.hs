@@ -4,9 +4,14 @@ import Graphics.Gloss.Interface.IO.Game (Event(..), KeyState(..), Key(..))
 import Map ( mazeMap, Cell(..) )
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Interact (Event)
-import Maze ( Maze, generateLeaves, updateMaze )
+import qualified Data.Map.Strict as Map
+import Graphics.Gloss.Interface.Pure.Game
+    ( Event(EventKey),
+      Key(SpecialKey),
+      KeyState(Down, Up),
+      SpecialKey(KeyRight, KeyUp, KeyDown, KeyLeft) )
+import Maze ( Maze, generateLeaves, updateMaze, startCoord, incrementS, incrementW, incrementA, incrementD )
 import System.IO.Unsafe (unsafePerformIO)
-
 
 cellSize :: Float
 cellSize = 20
@@ -46,5 +51,9 @@ mazeToPicture world =
 
 handleInput :: Event -> World -> World
 handleInput (EventKey (Char 'r') Down _ _) _ = unsafePerformIO initializeWorld
-handleInput (EventKey (Char 'q') Down _ _) _ = error "Bye!"
+-- handleInput (EventKey (Char 'q') Down _ _) _ = updateMaze mazeMap incrementS Start
+handleInput (EventKey (SpecialKey KeyUp) Down _ _) (World world) = World (updateMaze mazeMap (incrementW startCoord) Start)
+handleInput (EventKey (SpecialKey KeyLeft) Down _ _) (World world) = World (updateMaze mazeMap (incrementA startCoord) Start)
+handleInput (EventKey (SpecialKey KeyDown) Down _ _) (World world) = World (updateMaze mazeMap (incrementS startCoord) Start)
+handleInput (EventKey (SpecialKey KeyRight) Down _ _) (World world) = World (updateMaze mazeMap (incrementD startCoord) Start)
 handleInput _ world = world
