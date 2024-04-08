@@ -1,4 +1,4 @@
-module Maze(Maze, updateMaze, generateLeaves) where
+module Maze(Maze,Coord, updateMaze, generateLeaves) where
 import System.Random ( randomRIO )
 import Map(mazeMap,Cell(..))
 import Control.Monad (replicateM)
@@ -43,7 +43,7 @@ randomElem xs = do
         return $ xs !! i
 
 numberOfLeaves :: Int
-numberOfLeaves = 10
+numberOfLeaves = 3
 
 generateLeaf :: Maze -> IO Coord
 generateLeaf maze = do

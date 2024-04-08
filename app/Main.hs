@@ -5,9 +5,16 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Interact (Event)
 import Graphics.Gloss.Interface.IO.Game (Event(..), KeyState(..), Key(..))
 import Map (mazeMap, Cell(..))
-import Maze (Maze, generateLeaves, updateMaze)
+import Maze (Maze, Coord, generateLeaves, updateMaze)
+import Dijkstra (calculateMinSteps)
 
 import Control.Monad.IO.Class (liftIO)
+
+endPos :: Coord
+endPos = (23, 17)
+
+startPos :: Coord
+startPos = (1, 1)
 
 
 cellSize :: Float
@@ -29,6 +36,10 @@ main :: IO ()
 main = do
   let initialMaze = mazeMap
   leaves <- generateLeaves initialMaze
+  minSteps <- calculateMinSteps startPos endPos leaves mazeMap
+  -- viewMaze initialMaze  -- Exibe o labirinto
+  print minSteps        -- Imprime o número mínimo de passos
+  print leaves
   newWorld <- initializeWorld
   let mazeWithLeaves = foldl (\mz (x, y) -> updateMaze mz (x, y) Leaf) initialMaze leaves
   play
