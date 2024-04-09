@@ -1,12 +1,20 @@
+{-# LANGUAGE GADTs #-}
+
 module World where
 
 import Graphics.Gloss.Interface.IO.Game (Event(..), KeyState(..), Key(..))
 import Map ( mazeMap, Cell(..) )
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Interact (Event)
-import Maze ( Maze, Coord, generateLeaves, updateMaze )
-import System.IO.Unsafe (unsafePerformIO)
 import Graphics.Gloss.Data.Color (makeColor, blue)
+import qualified Data.Map.Strict as Map
+import Graphics.Gloss.Interface.Pure.Game
+    ( Event(EventKey),
+      Key(SpecialKey),
+      KeyState(Down, Up),
+      SpecialKey(KeyRight, KeyUp, KeyDown, KeyLeft) )
+import Maze ( Maze, Coord, generateLeaves, updateMaze, startCoord, incrementS, incrementW, incrementA, incrementD, Coord, Directions(..), goToNeighbor )
+import System.IO.Unsafe (unsafePerformIO)
 
 cellSize :: Float
 cellSize = 20
@@ -26,7 +34,8 @@ initializeWorld leavesList = do
         newWorld = World {
             worldMap = mazeWithLeaves,
             endPos = (23, 17),
-            startPos = (1, 1)
+            startPos = (1, 1),
+            playerPos = (1, 1)
         }
     return newWorld
 
@@ -34,7 +43,8 @@ sampleWorld :: Maze -> World
 sampleWorld maze = World {worldMap = maze}
 
 data World where
-  World :: {worldMap :: Maze, endPos :: Coord, startPos :: Coord} -> World
+
+  World :: {worldMap :: Maze, endPos :: Coord, startPos :: Coord, playerPos :: Coord} -> World
 
 mazeToPicture :: [Coord] -> World -> Picture
 mazeToPicture minSteps world =
@@ -46,6 +56,25 @@ mazeToPicture minSteps world =
     in translate (-240) (-225) . pictures $
                                     [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y,  row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [minStepsPictures]
 
+-- handleInput :: Event -> World -> World
+-- handleInput (EventKey (Char 'r') Down _ _) _ = unsafePerformIO initializeWorld
+-- handleInput (EventKey (Char 'q') Down _ _) _ = updateMaze mazeMap incrementS Start
+
 handleInput :: Event -> World -> World
-handleInput (EventKey (Char 'q') Down _ _) _ = error "Bye!"
+handleInput (EventKey (SpecialKey KeyDown) Down _ _)  world =
+    World { worldMap = updateMaze (updateMaze (worldMap world) (playerPos world) Path) 
+                        (goToNeighbor (worldMap world) (playerPos world) ToDown) Start,
+                        playerPos = (goToNeighbor (worldMap world) (playerPos world) ToDown) }
+handleInput (EventKey (SpecialKey KeyUp) Down _ _)  world =
+    World { worldMap = updateMaze (updateMaze (worldMap world) (playerPos world) Path) 
+                        (goToNeighbor (worldMap world) (playerPos world) ToUp) Start,
+                        playerPos = (goToNeighbor (worldMap world) (playerPos world) ToUp) }
+handleInput (EventKey (SpecialKey KeyLeft) Down _ _)  world =
+    World { worldMap = updateMaze (updateMaze (worldMap world) (playerPos world) Path) 
+                        (goToNeighbor (worldMap world) (playerPos world) ToLeft) Start,
+                        playerPos = (goToNeighbor (worldMap world) (playerPos world) ToLeft) }
+handleInput (EventKey (SpecialKey KeyRight) Down _ _)  world =
+    World { worldMap = updateMaze (updateMaze (worldMap world) (playerPos world) Path) 
+                        (goToNeighbor (worldMap world) (playerPos world) ToRight) Start,
+                        playerPos = (goToNeighbor (worldMap world) (playerPos world) ToRight) }
 handleInput _ world = world
