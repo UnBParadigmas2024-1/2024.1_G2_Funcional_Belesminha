@@ -1,11 +1,13 @@
-module Dijkstra(calculateMinSteps, endPos, startPos) where
+module Dijkstra(calculateMinSteps,endPos,startPos) where
+
+import Data.List (minimumBy, foldl')
 import qualified Data.Set as Set
 import Data.Maybe (fromJust)
-import Data.List (minimumBy, foldl')
 import Data.Function (on)
-import Map ( mazeMap, Cell(Leaf, Wall) )
-import Maze (Coord)
+
 import World (World(..))
+import Map (Cell(..))
+import Maze (Coord)
 
 type Position = (Int, Int)
 
@@ -19,13 +21,11 @@ permutation xs = [ x:ys | x <- xs, ys <- permutation (delete x xs)]
           | y == x   = delete y xs
           | otherwise = x : delete y xs
 
--- Retorna a lista de vizinhos válidos de uma posição
 getValidNeighbors :: Position -> [[Cell]] -> [Position]
-getValidNeighbors (x, y) maze = filter (\(x', y') -> x' >= 0 && y' >= 0 && x' < length maze && y' < length (k) && maze !! x' !! y' /= Wall) [(x, y + 1), (x, y - 1), (x + 1, y), (x - 1, y)]
+getValidNeighbors (x, y) maze = filter (\(x', y') -> x' >= 0 && y' >= 0 && x' < length maze && y' < length k && maze !! x' !! y' /= Wall) [(x, y + 1), (x, y - 1), (x + 1, y), (x - 1, y)]
     where
         (k:ks) = maze
 
--- Algoritmo de Dijkstra
 dijkstra :: Position -> Position -> [[Cell]] -> Maybe [Position]
 dijkstra start end maze = dijkstra' (Set.singleton (0, start, [start])) Set.empty
     where
@@ -38,13 +38,10 @@ dijkstra start end maze = dijkstra' (Set.singleton (0, start, [start])) Set.empt
                 else let neighbors = getValidNeighbors pos maze in
                     dijkstra' (foldl' (\acc neighbor -> Set.insert (cost + 1, neighbor, path ++ [neighbor]) acc) pq' neighbors) (Set.insert pos visited)
 
--- Função para encontrar o caminho de start até um destino específico
 findPathToDestination :: Position -> Position -> [[Cell]] -> Maybe [Position]
 findPathToDestination start end maze = dijkstra start end maze
 
--- Função para calcular o caminho total passando por todas as frutas
 calculateFullPath :: Position -> [Position] -> Position -> [[Cell]] -> Maybe [Position]
--- Se não houver frutas, calcula o caminho direto de start até end
 calculateFullPath start [] end maze = findPathToDestination start end maze
 calculateFullPath start (fruta:outrasFrutas) end maze = do
     pathToFruta <- findPathToDestination start fruta maze
