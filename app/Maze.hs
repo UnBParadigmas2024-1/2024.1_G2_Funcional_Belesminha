@@ -43,7 +43,7 @@ randomElem xs = do
         return $ xs !! i
 
 numberOfLeaves :: Int
-numberOfLeaves = 3
+numberOfLeaves = 5
 
 generateLeaf :: Maze -> IO Coord
 generateLeaf maze = do
