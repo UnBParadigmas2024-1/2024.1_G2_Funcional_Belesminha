@@ -1,7 +1,8 @@
+
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use elemIndex" #-}
 {-# LANGUAGE BlockArguments #-}
-module Maze(Maze, updateMaze, generateLeaves, startCoord, incrementS, incrementA, incrementW, incrementD, Coord, Directions(..), goToNeighbor) where
+module Maze(Maze, Coord, updateMaze, generateLeaves, startCoord, incrementS, incrementA, incrementW, incrementD, Coord, Directions(..), goToNeighbor) where
 import System.Random ( randomRIO )
 import Map(mazeMap,Cell(..))
 import Control.Monad (replicateM)
@@ -75,7 +76,7 @@ randomElem xs = do
         return $ xs !! i
 
 numberOfLeaves :: Int
-numberOfLeaves = 10
+numberOfLeaves = 5
 
 generateLeaf :: Maze -> IO Coord
 generateLeaf maze = do

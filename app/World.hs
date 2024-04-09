@@ -6,13 +6,14 @@ import Graphics.Gloss.Interface.IO.Game (Event(..), KeyState(..), Key(..))
 import Map ( mazeMap, Cell(..) )
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Interact (Event)
+import Graphics.Gloss.Data.Color (makeColor, blue)
 import qualified Data.Map.Strict as Map
 import Graphics.Gloss.Interface.Pure.Game
     ( Event(EventKey),
       Key(SpecialKey),
       KeyState(Down, Up),
       SpecialKey(KeyRight, KeyUp, KeyDown, KeyLeft) )
-import Maze ( Maze, generateLeaves, updateMaze, startCoord, incrementS, incrementW, incrementA, incrementD, Coord, Directions(..), goToNeighbor )
+import Maze ( Maze, Coord, generateLeaves, updateMaze, startCoord, incrementS, incrementW, incrementA, incrementD, Coord, Directions(..), goToNeighbor )
 import System.IO.Unsafe (unsafePerformIO)
 
 cellSize :: Float
@@ -25,13 +26,15 @@ cellToPicture Start = color green $ rectangleSolid cellSize cellSize
 cellToPicture End = color red $ rectangleSolid cellSize cellSize
 cellToPicture Leaf = color orange $ rectangleSolid cellSize cellSize
 
-initializeWorld :: Maze -> IO World
-initializeWorld maze = do
-    let initialMaze = maze
-    leaves <- generateLeaves initialMaze
+initializeWorld :: [Coord] -> IO World
+initializeWorld leavesList = do
+    let initialMaze = mazeMap
+        leaves = leavesList
     let mazeWithLeaves = foldl (\mz (x,y) -> updateMaze mz (x,y) Leaf) initialMaze leaves
         newWorld = World {
             worldMap = mazeWithLeaves,
+            endPos = (23, 17),
+            startPos = (1, 1),
             playerPos = (1, 1)
         }
     return newWorld
@@ -40,18 +43,18 @@ sampleWorld :: Maze -> World
 sampleWorld maze = World {worldMap = maze}
 
 data World where
-  World :: {worldMap :: Maze,
-            playerPos :: Coord} -> World
 
-mazeToPicture :: World -> Picture
-mazeToPicture world =
+  World :: {worldMap :: Maze, endPos :: Coord, startPos :: Coord, playerPos :: Coord} -> World
+
+mazeToPicture :: [Coord] -> World -> Picture
+mazeToPicture minSteps world =
     let maze = worldMap world
+        xa =  map(\(x, y) -> y) minSteps
+        yb = map(\(x, y) -> 24-x) minSteps
         reversedMaze = reverse maze
+        minStepsPictures = pictures [translate (fromIntegral x * cellSize) (fromIntegral y * cellSize) (color (makeColor 0 0 1 0.2) $ rectangleSolid cellSize cellSize) | (x, y) <- zip xa yb]
     in translate (-240) (-225) . pictures $
-    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell)
-    | (y,  row) <- zip [0..] reversedMaze
-    , (x, cell) <- zip [0..] row
-    ]
+                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y,  row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [minStepsPictures]
 
 -- handleInput :: Event -> World -> World
 -- handleInput (EventKey (Char 'r') Down _ _) _ = unsafePerformIO initializeWorld
