@@ -1,4 +1,4 @@
-import World ( sampleWorld, mazeToPicture, handleInput, initializeWorld )
+import World (  mazeToPicture, handleInput, initializeWorld )
 import Maze ( generateLeaves, updateMaze )
 import Map ( mazeMap, Cell(Leaf) )
 import Graphics.Gloss
@@ -19,9 +19,6 @@ cellToPicture Start = color green $ rectangleSolid cellSize cellSize
 cellToPicture End = color red $ rectangleSolid cellSize cellSize
 cellToPicture Leaf = color orange $ rectangleSolid cellSize cellSize
 cellToPicture MinStep = color (makeColor 0.5 0.5 0.5 1) $ rectangleSolid cellSize cellSize
-
-sampleWorld :: Maze -> World
-sampleWorld maze = World {worldMap = maze}
 
 data World = World {worldMap :: Maze}
 

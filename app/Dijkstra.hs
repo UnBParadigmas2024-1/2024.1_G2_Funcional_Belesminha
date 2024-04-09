@@ -21,7 +21,9 @@ permutation xs = [ x:ys | x <- xs, ys <- permutation (delete x xs)]
 
 -- Retorna a lista de vizinhos válidos de uma posição
 getValidNeighbors :: Position -> [[Cell]] -> [Position]
-getValidNeighbors (x, y) maze = filter (\(x', y') -> x' >= 0 && y' >= 0 && x' < length maze && y' < length (head maze) && maze !! x' !! y' /= Wall) [(x, y + 1), (x, y - 1), (x + 1, y), (x - 1, y)]
+getValidNeighbors (x, y) maze = filter (\(x', y') -> x' >= 0 && y' >= 0 && x' < length maze && y' < length (k) && maze !! x' !! y' /= Wall) [(x, y + 1), (x, y - 1), (x + 1, y), (x - 1, y)]
+    where
+        (k:ks) = maze
 
 -- Algoritmo de Dijkstra
 dijkstra :: Position -> Position -> [[Cell]] -> Maybe [Position]
@@ -47,7 +49,8 @@ calculateFullPath start [] end maze = findPathToDestination start end maze
 calculateFullPath start (fruta:outrasFrutas) end maze = do
     pathToFruta <- findPathToDestination start fruta maze
     pathToRest <- calculateFullPath fruta outrasFrutas end maze
-    return (pathToFruta ++ tail pathToRest)
+    let x:xs = pathToRest
+    return (pathToFruta ++ xs)
 
 calculateMinSteps :: World -> [Position] -> [[Cell]] -> IO [Position]
 calculateMinSteps world leaves maze =

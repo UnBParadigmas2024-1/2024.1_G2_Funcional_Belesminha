@@ -39,9 +39,6 @@ initializeWorld leavesList = do
         }
     return newWorld
 
-sampleWorld :: Maze -> World
-sampleWorld maze = World {worldMap = maze}
-
 data World where
 
   World :: {worldMap :: Maze, endPos :: Coord, startPos :: Coord, playerPos :: Coord} -> World
