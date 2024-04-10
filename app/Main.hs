@@ -5,7 +5,8 @@ import Dijkstra (calculateMinSteps)
 import Maze (generateLeaves)
 import Map (mazeMap)
 import Graphics.Gloss.Interface.IO.Game (playIO)
-import MenuSetUp (menuWindow, menuBackgroundColor, menuDrawing) 
+import MenuSetUp (menuWindow, menuBackgroundColor, menuDrawing, menuEntry, MenuEntry (NewGame), MenuEntryState (Selected)) 
+import Graphics.Gloss.Interface.IO.Display (displayIO)
 
 windowDisplay :: Display
 windowDisplay = InWindow "Belesminha: Menu principal" (600, 600) (100, 100)
@@ -18,6 +19,10 @@ main = do
   newWorld <- initializeWorld leaves
   minSteps <- calculateMinSteps newWorld leaves initialMaze
   
+  display menuWindow menuBackgroundColor menuEntry NewGame Selected
+
+  -- displayIO menuWindow menuBackgroundColor menuEntries controllerSetRedraw 
+
   -- playIO 
   --   (InWindow "Belesminha: Menu principal" (600, 600) (100, 100))
   --   black
