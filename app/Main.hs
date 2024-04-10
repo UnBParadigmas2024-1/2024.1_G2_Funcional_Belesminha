@@ -1,6 +1,6 @@
 import Graphics.Gloss
 
-import World (mazeToPicture,handleInput,initializeWorld)
+import World (mazeToPicture,handleInput,initializeWorld,updateWorld)
 import Dijkstra (calculateMinSteps)
 import Maze (generateLeaves)
 import Map (mazeMap)
@@ -20,4 +20,4 @@ main = do
     newWorld
     (mazeToPicture minSteps)
     handleInput
-    (\time nothing -> nothing)
+    updateWorld

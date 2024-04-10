@@ -9,6 +9,8 @@ import Graphics.Gloss.Interface.Pure.Game
 import Map (mazeMap,cellSize,cellToPicture,Cell(..))
 import Maze (Maze,Coord,updateMaze,Coord,Directions(..),goToNeighbor)
 
+data PlayState = Playing | GameOver | GameWon deriving (Eq)
+
 initializeWorld :: [Coord] -> IO World
 initializeWorld leavesList = do
     let initialMaze = mazeMap
@@ -19,7 +21,8 @@ initializeWorld leavesList = do
             endPos    = (23, 17),
             startPos  = (1, 1),
             playerPos = (1, 1),
-            moveCount = 0
+            moveCount = 0,
+            playingState = Playing
         }
     return newWorld
 
@@ -28,7 +31,17 @@ data World where
         endPos :: Coord, 
         startPos :: Coord, 
         playerPos :: Coord,
-        moveCount :: Int } -> World
+        moveCount :: Int,
+        playingState :: PlayState } -> World
+
+updateWorld :: Float -> World -> World
+updateWorld time world 
+    | playerPosition == endPosition = world { playingState = GameWon }
+    | otherwise = world
+    where
+        playerPosition = playerPos world
+        endPosition = endPos world
+
 
 mazeToPicture :: [Coord] -> World -> Picture
 mazeToPicture minSteps world =
@@ -37,8 +50,14 @@ mazeToPicture minSteps world =
         yb = map(\(x, y) -> 24-x) minSteps
         reversedMaze = reverse maze
         minStepsPictures = pictures [translate (fromIntegral x * cellSize) (fromIntegral y * cellSize) (color (makeColor 0 0 1 0.2) $ rectangleSolid cellSize cellSize) | (x, y) <- zip xa yb]
-    in translate (-240) (-225) . pictures $
+    in if playingState world == GameWon
+        then translate (-240) (-225) . pictures $
                                     [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y,  row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [minStepsPictures] ++ [drawStepCount (moveCount world)]
+       else if playingState world == Playing
+        then translate (-240) (-225) . pictures $
+                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y,  row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [drawStepCount (moveCount world)]
+       else translate (-240) (-225) . pictures $
+                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y,  row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] 
 
 drawStepCount :: Int -> Picture
 drawStepCount n = Translate (0) (-40) $ Scale 0.3 0.3 $ Color white $ Text $ "STEPS: " ++ show n
@@ -57,7 +76,7 @@ incrementStep (x1,y1) (x2,y2)
 
 handleInput :: Event -> World -> World
 handleInput ev world =
-    World { worldMap = newMap', playerPos = newPos, moveCount = stepsTaken+increase }
+    world { worldMap = newMap', playerPos = newPos, moveCount = stepsTaken+increase }
     where
         map = worldMap world
         plPos = playerPos world
