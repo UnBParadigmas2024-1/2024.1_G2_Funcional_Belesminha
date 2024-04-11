@@ -12,8 +12,8 @@ elif [ "$OSTYPE" = "Linux" ]; then
     sudo apt-get remove --purge libglew-dev libglfw3-dev libglm-dev -y
     sudo apt-get remove --purge libao-dev libmpg123-dev -y
     sudo apt-get remove --purge cabal-install -y
-    
     sudo apt-get remove --purge haskell-platform -y
+    ghcup nuke
 else
     echo "Windows"
 fi
