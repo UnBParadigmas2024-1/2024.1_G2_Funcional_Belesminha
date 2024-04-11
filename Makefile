@@ -1,11 +1,11 @@
 .PHONY: run clean build all
 all: build run
 run:
-	sudo cabal run
+	bash -c "cabal run"
 clean:
-	sudo cabal clean
+	bash -c "cabal clean"
 build:
-	sudo cabal build
+	bash -c "cabal build"
 
 .PHONY: init
 init:
