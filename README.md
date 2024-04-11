@@ -52,6 +52,12 @@ Basta apenas executar o comando abaixo.
 make docker-build && make run
 ```
 
+Se você executar no MacOS e tiver um erro de permissão, execute o `make run` com `sudo`, como `sudo make run`:
+
+```sh
+make docker-build && sudo make run
+```
+
 ### Linux
 
 Basta apenas executar o comando abaixo. Contudo, para a instalação do Haskell no ambiente Linux, será necessário confirmar todas as solicitudes do GHCup pressionando sempre ENTER.
