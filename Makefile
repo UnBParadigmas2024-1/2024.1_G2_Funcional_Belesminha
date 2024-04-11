@@ -1,19 +1,17 @@
-.PHONY: run clean build all
+.PHONY: all run clean build docker-build install uninstall
 all: build run
+
 run:
 	bash -c "cabal run"
 clean:
 	bash -c "cabal clean"
 build:
 	bash -c "cabal build"
-
-.PHONY: init
-init:
-	docker-compose up --build -d
-	docker exec -it ubuntu zsh
+docker-build:
+	docker-compose up
 install:
 	chmod +x ./install.sh
 	./install.sh
-uninstall:
+uninstall: clean
 	chmod +x ./uninstall.sh
 	./uninstall.sh
