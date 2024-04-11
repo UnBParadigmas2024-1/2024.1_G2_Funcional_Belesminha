@@ -46,7 +46,7 @@ O uso do projeto está facilitado pelos autores utilizando `Makefiles` e a insta
 
 ### Docker (Recomendado)
 
-Basta apenas executar o comando abaixo.
+Você deve estar em um Linux para este método funcionar, porque o Docker compila a imagem dentro de um Ubuntu e não é possível rodar uma imagem de MacOS. Basta apenas executar o comando abaixo.
 
 ```sh
 make docker-build
@@ -65,7 +65,7 @@ make install && make
 Basta apenas executar o comando abaixo.
 
 ```sh
-make install && make
+make install && sudo make
 ```
 
 ## Vídeo
