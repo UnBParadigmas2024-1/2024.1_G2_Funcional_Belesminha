@@ -33,6 +33,8 @@ Adicione 2 ou mais screenshots do projeto em termos de interface e/ou funcioname
 Pré requisitos:
 
 - Makefile
+- Docker
+- Docker Compose
 
 Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
 Insira um manual ou um script para auxiliar ainda mais.
@@ -40,14 +42,30 @@ Gifs animados e outras ilustrações são bem-vindos!
 
 ## Uso
 
-O uso do projeto está facilitado pelos autores utilizando `Makefiles` e a instalação funciona para ambientes Linux ou MacOS. 
+O uso do projeto está facilitado pelos autores utilizando `Makefiles` e a instalação funciona para ambientes Linux ou MacOS. Também se pode *buildar* o projeto usando Docker. 
 
-Portanto, para a instalação do ambiente Haskell e as dependências do projeto, basta executar `make install` na pasta *root* do projeto. Logo após, entre na pasta `app/` e execute `make`. As duas etapas podem ser realizadas com `cd app && make`.
+### Docker (Recomendado)
 
-Se preferir, tudo pode ser executado com um único comando na pasta *root*:
+Basta apenas executar o comando abaixo.
 
 ```sh
-make install && cd app && make
+make docker-build && make run
+```
+
+### Linux
+
+Basta apenas executar o comando abaixo. Contudo, para a instalação do Haskell no ambiente Linux, será necessário confirmar todas as solicitudes do GHCup pressionando sempre ENTER.
+
+```sh
+make install && make
+```
+
+### MacOS
+
+Basta apenas executar o comando abaixo.
+
+```sh
+make install && make
 ```
 
 ## Vídeo
