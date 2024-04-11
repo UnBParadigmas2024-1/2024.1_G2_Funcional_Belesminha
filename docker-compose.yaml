@@ -1,6 +1,0 @@
-services:
-  ubuntu:
-    container_name: ubuntu
-    build: .
-    volumes:
-      - ./dist-newstyle:/build/dist-newstyle

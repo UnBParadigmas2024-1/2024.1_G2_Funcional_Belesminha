@@ -49,13 +49,7 @@ O uso do projeto está facilitado pelos autores utilizando `Makefiles` e a insta
 Basta apenas executar o comando abaixo.
 
 ```sh
-make docker-build && make run
-```
-
-Se você executar no MacOS e tiver um erro de permissão, execute o `make run` com `sudo`, como `sudo make run`:
-
-```sh
-make docker-build && sudo make run
+make docker-build
 ```
 
 ### Linux

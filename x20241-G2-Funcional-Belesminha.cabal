@@ -53,7 +53,7 @@ extra-doc-files:    CHANGELOG.md
 common warnings
     ghc-options: -w
 
-executable x20241-G2-Funcional-Belesminha
+executable x20241-G2-Funcional-Belesminha-exec.out
     -- Import common warning flags.
     import:           warnings
 
@@ -75,9 +75,7 @@ executable x20241-G2-Funcional-Belesminha
         base >=4.13.0.0 && <=4.19.1.0,
         gloss ^>=1.13.2.2,
         random ^>=1.2.1.2,
-        containers ^>=0.6.8,
-        GLURaw ^>=2.0.0.5,
-        OpenGL ^>=3.0.3.0
+        containers ^>=0.6.8
 
     -- Directories containing source files.
     hs-source-dirs:   app
