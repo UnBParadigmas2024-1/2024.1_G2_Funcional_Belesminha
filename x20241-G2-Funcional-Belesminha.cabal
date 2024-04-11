@@ -72,10 +72,12 @@ executable x20241-G2-Funcional-Belesminha
 
     -- Other library packages from which modules are imported.
     build-depends:    
-        base ^>=4.19.1.0,
+        base ^>=4.17.2.0,
         gloss ^>=1.13.2.2,
         random ^>=1.2.1.2,
-        containers ^>=0.6.8
+        containers ^>=0.6.8,
+        GLURaw ^>=2.0.0.5,
+        OpenGL ^>=3.0.3.0
 
     -- Directories containing source files.
     hs-source-dirs:   app
