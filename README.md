@@ -28,18 +28,27 @@ Adicione 2 ou mais screenshots do projeto em termos de interface e/ou funcioname
 
 ## Instalação 
 **Linguagens**: Haskell<br>
-**Tecnologias**: xxxxxx<br>
+**Tecnologias**: Gloss<br>
+
+Pré requisitos:
+
+- Makefile
+
 Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
 Insira um manual ou um script para auxiliar ainda mais.
 Gifs animados e outras ilustrações são bem-vindos!
 
-## Uso 
+## Uso
+
+O uso do projeto está facilitado pelos autores utilizando `Makefiles` e a instalação funciona para ambientes Linux ou MacOS. 
+
+Portanto, para a instalação do ambiente Haskell e as dependências do projeto, basta executar `make install` na pasta *root* do projeto. Logo após, entre na pasta `app/` e execute `make`. As duas etapas podem ser realizadas com `cd app && make`.
+
+Se preferir, tudo pode ser executado com um único comando na pasta *root*:
+
 ```sh
-cabal install --lib gloss
+make install && cd app && make
 ```
-Explique como usar seu projeto.
-Procure ilustrar em passos, com apoio de telas do software, seja com base na interface gráfica, seja com base no terminal.
-Nessa seção, deve-se revelar de forma clara sobre o funcionamento do software.
 
 ## Vídeo
 Adicione 1 ou mais vídeos com a execução do projeto.
@@ -64,7 +73,7 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 |Kevin Luis|||
 |Matheus Monteiro|||
 |Thiago Vivan Bastos|||
-|Victor Buendia|||
+|Victor Buendia|- Criação dos tipos de dados para labirinto <br/> - Criação do mapa fixo do labirinto <br/> - Cria função de checagem se ponto faz parte do limite do labirinto <br/> - Criação do tipo de dados e dinâmica de direção no labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Exibição do caminho ideal na tela <br/> - Contador de passos do usuário e impressão na tela <br/> - Impressão do caminho/rastro do usuário à medida que se move <br/> - Ajuda na implementação da movimentação do player <br/> - Implementação do Gloss no projeto <br/> - Criação da Makefile para instalação e compilação do projeto |Excelente|
 
 ## Outros 
 Quaisquer outras informações sobre o projeto podem ser descritas aqui. Não esqueça, entretanto, de informar sobre:
