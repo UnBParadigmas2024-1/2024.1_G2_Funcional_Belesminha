@@ -65,7 +65,8 @@ executable x20241-G2-Funcional-Belesminha-exec.out
         Dijkstra,
         Map,
         Maze,
-        World
+        World, 
+        Ranking,
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
