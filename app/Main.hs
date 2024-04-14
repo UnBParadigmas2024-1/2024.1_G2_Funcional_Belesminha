@@ -1,9 +1,9 @@
 import Graphics.Gloss
-import World (mazeToPicture, handleInput, initializeWorld, updateWorld)
+import World (mazeToPicture, handleInput, initializeWorld, updateWorld, moveCount)
 import Dijkstra (calculateMinSteps)
 import Maze (generateLeaves)
 import Map (mazeMap)
-import Ranking (showRanking)
+import Ranking (showRanking, writeRanking)
 
 
 main :: IO ()
@@ -27,3 +27,6 @@ main = do
         (mazeToPicture minSteps)
         handleInput
         updateWorld
+    
+    -- Atualizar o ranking
+    writeRanking (moveCount newWorld)

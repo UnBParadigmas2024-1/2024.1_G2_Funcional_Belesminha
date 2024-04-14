@@ -1,6 +1,7 @@
 module Ranking where
 
 import System.IO
+import qualified System.IO.Strict as SIO
 
 -- Função para ler o conteúdo do arquivo e mostrar o ranking na tela
 showRanking :: FilePath -> IO ()
@@ -17,3 +18,11 @@ showRanking filePath = do
 
   -- Fechar o arquivo após a leitura
   hClose handle
+
+writeRanking :: Int -> IO ()
+writeRanking moveCount = do
+    let filePath = "ranking.txt"
+    ranking <- SIO.readFile filePath
+    let rankingList = lines ranking
+    let newRanking = show moveCount : rankingList
+    writeFile filePath (unlines newRanking)

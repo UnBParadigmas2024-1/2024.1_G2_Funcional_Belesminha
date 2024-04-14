@@ -76,7 +76,8 @@ executable x20241-G2-Funcional-Belesminha-exec.out
         base >=4.13.0.0 && <=4.19.1.0,
         gloss ^>=1.13.2.2,
         random ^>=1.2.1.2,
-        containers ^>=0.6.8
+        containers ^>=0.6.8,
+        strict ^>= 0.5
 
     -- Directories containing source files.
     hs-source-dirs:   app
