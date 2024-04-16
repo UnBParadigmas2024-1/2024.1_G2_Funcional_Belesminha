@@ -25,7 +25,8 @@ initializeWorld leavesList = do
             moveCount = 0,
             playingState = Playing,
             listOfCurrentPlayerPositions = [(1, 1)],
-            maxSteps = 0
+            maxSteps = 0,
+            leafCount = 0
         }
     return newWorld
 
@@ -37,7 +38,8 @@ data World where
         moveCount :: Int,
         playingState :: PlayState,
         listOfCurrentPlayerPositions :: [Coord],
-        maxSteps :: Int
+        maxSteps :: Int,
+        leafCount :: Int
         } -> World
 
 updateWorld :: Float -> World -> World
@@ -66,10 +68,10 @@ mazeToPicture minSteps world =
         playerPath = pictures [translate (fromIntegral x * cellSize) (fromIntegral y * cellSize) (color (makeColor 1 0 0 0.1) $ rectangleSolid cellSize cellSize) | (x, y) <- zip xp yp]
     in if playingState world == GameWon
         then translate (-240) (-225) . pictures $
-                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [minStepsPictures] ++ [drawStepCount (moveCount world)] ++ [drawMaxSteps (maxSteps world - moveCount world)] ++ [playerPath]
+                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [minStepsPictures] ++ [drawStepCount (moveCount world)] ++ [drawMaxSteps (maxSteps world - moveCount world)] ++ [playerPath] ++ [drawLeafCount (leafCount world)]
         else if playingState world == Playing
             then translate (-240) (-225) . pictures $
-                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [drawStepCount (moveCount world)]  ++ [drawMaxSteps (maxSteps world - moveCount world)] ++ [playerPath]
+                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [drawStepCount (moveCount world)]  ++ [drawMaxSteps (maxSteps world - moveCount world)] ++ [playerPath] ++ [drawLeafCount (leafCount world)]
         else if playingState world == GameOver
             then translate (-240) (-225) . pictures $
                                     [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [drawGameOverText] ++ [minStepsPictures] ++ [playerPath]
@@ -81,7 +83,10 @@ drawStepCount :: Int -> Picture
 drawStepCount n = Translate (0) (-40) $ Scale 0.3 0.3 $ Color white $ Text $ "STEPS: " ++ show n 
 
 drawMaxSteps :: Int -> Picture
-drawMaxSteps n = Translate (0) (-40) $ Scale 0.2 0.2 $ Color white $ Text $ "               MAX STEPS: " ++ show n
+drawMaxSteps n = Translate (-80) (-40) $ Scale 0.2 0.2 $ Color white $ Text $ "               MAX STEPS: " ++ show n
+
+drawLeafCount :: Int -> Picture
+drawLeafCount n = Translate (0) (-100) $ Scale 0.3 0.3 $ Color white $ Text $ "LEAFS: " ++ show n
 
 changeDirection :: Event -> Directions
 changeDirection (EventKey (SpecialKey KeyDown) Down _ _)  = ToDown
@@ -95,11 +100,17 @@ incrementStep (x1,y1) (x2,y2)
     | x1 == x2 && y1 == y2 = 0
     | otherwise = 1
 
+incrementLeafCount :: Maze -> Coord -> Coord -> Int
+incrementLeafCount maze (x1,y1) (x2,y2)
+    | x1 == x2 && y1 == y2 = 0
+    | maze !! x2 !! y2 == Leaf = 1
+    | otherwise = 0
+
 handleInput :: Event -> World -> World
 handleInput ev world
     | maxSteps world == 0 = world { playingState = GameOver } -- Verifica se o número máximo de passos é 0 e atualiza o estado do jogo para GameOver
     | otherwise =
-        world { worldMap = newMap', playerPos = newPos, moveCount = stepsTaken + increase, listOfCurrentPlayerPositions = listOfCurrentPlayerPositions', maxSteps = maxSteps world }
+        world { worldMap = newMap', playerPos = newPos, moveCount = stepsTaken + increase, listOfCurrentPlayerPositions = listOfCurrentPlayerPositions', maxSteps = maxSteps world, leafCount = increaseLeaf + leavesTaken }
     where
         
         map = worldMap world
@@ -111,4 +122,8 @@ handleInput ev world
         newPos = goToNeighbor map plPos dir
         newMap' = updateMaze newMap newPos Start
         increase = incrementStep plPos newPos
+
+        leavesTaken = leafCount world
+        increaseLeaf = incrementLeafCount newMap plPos newPos
+
         listOfCurrentPlayerPositions' = if newPos == plPos then listOfCurrentPlayerPositions world else listOfCurrentPlayerPositions world ++ [newPos]
