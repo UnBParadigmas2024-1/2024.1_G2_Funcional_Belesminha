@@ -85,7 +85,7 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 |Ailton Aires|||
 |Arthur Sena|||
 |Eric Chagas de Oliveira|||
-|Fernando Vargas|||
+|Fernando Vargas|- Criação do mapa fixo do labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Refatorações de funções com o objetivo de seguir as convenções da comunidade do Haskell| Boa |
 |Gabriel Luiz|190013354|
 |Guilherme Daniel Fernandes da Silva|||
 |Kevin Luis|||
