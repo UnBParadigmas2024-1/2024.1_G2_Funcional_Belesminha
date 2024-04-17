@@ -1,19 +1,20 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 AS build_stage
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install ghc cabal-install haskell-stack haskell-platform -y
-RUN cabal update
-RUN cabal install --lib random lens
 
-# OH MY ZSH & plugins
-RUN apt install build-essential curl file git -y
-RUN apt install -y zsh
-RUN chsh -s /usr/bin/zsh
-RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -y
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-RUN git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
-RUN git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete
-RUN sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)/' ~/.zshrc
+RUN apt-get install cmake pkg-config -y
+RUN apt-get install mesa-utils libglu1-mesa-dev freeglut3-dev mesa-common-dev -y
+RUN apt-get install libglew-dev libglfw3-dev libglm-dev libgl-dev -y
+RUN apt-get install libao-dev libmpg123-dev -y
+RUN apt-get install g++ -y
 
 WORKDIR /app
-ENTRYPOINT [ "zsh" ]
+COPY ./app ./app
+COPY ./x20241-G2-Funcional-Belesminha.cabal x20241-G2-Funcional-Belesminha.cabal
+
+RUN cabal update
+RUN cabal build
+
+FROM alpine:latest AS app
+WORKDIR /build
+COPY --from=build_stage /app/dist-newstyle ./dist-newstyle
