@@ -1,4 +1,4 @@
-module MenuSetUp where
+module MenuButtons where
 
 import Graphics.Gloss
 
