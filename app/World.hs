@@ -111,4 +111,4 @@ handleInput ev world
         newPos = goToNeighbor map plPos dir
         newMap' = updateMaze newMap newPos Start
         increase = incrementStep plPos newPos
-        listOfCurrentPlayerPositions' = listOfCurrentPlayerPositions world ++ [newPos]
+        listOfCurrentPlayerPositions' = if newPos == plPos then listOfCurrentPlayerPositions world else listOfCurrentPlayerPositions world ++ [newPos]
