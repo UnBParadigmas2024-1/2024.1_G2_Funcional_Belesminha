@@ -49,6 +49,11 @@ calculateFullPath start (fruta:outrasFrutas) end maze = do
     let x:xs = pathToRest
     return (pathToFruta ++ xs)
 
+
+printMinSteps :: [Position] -> IO ()
+printMinSteps minPath = do
+    print minPath
+
 calculateMinSteps :: World -> [Position] -> [[Cell]] -> IO [Position]
 calculateMinSteps world leaves maze =
     let fpermutations = permutation leaves
@@ -57,4 +62,6 @@ calculateMinSteps world leaves maze =
         allPaths = map (\fruitPermut -> calculateFullPath startPos' fruitPermut endPos' maze) fpermutations
         allPaths' = map fromJust allPaths
         minPath = minimumBy (compare `on` length) allPaths'
-        in return minPath
+    in do
+        printMinSteps minPath
+        return minPath
