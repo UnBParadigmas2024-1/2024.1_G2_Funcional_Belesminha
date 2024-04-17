@@ -26,7 +26,7 @@ initializeWorld leavesList = do
             playingState = Playing,
             listOfCurrentPlayerPositions = [(1, 1)],
             maxSteps = 0,
-            leafCount = 0
+            leafCount = length leavesList
         }
     return newWorld
 
@@ -103,7 +103,7 @@ incrementStep (x1,y1) (x2,y2)
 incrementLeafCount :: Maze -> Coord -> Coord -> Int
 incrementLeafCount maze (x1,y1) (x2,y2)
     | x1 == x2 && y1 == y2 = 0
-    | maze !! x2 !! y2 == Leaf = 1
+    | maze !! x2 !! y2 == Leaf = -1
     | otherwise = 0
 
 handleInput :: Event -> World -> World
