@@ -2,13 +2,12 @@
 {-# HLINT ignore "Use elemIndex" #-}
 {-# LANGUAGE BlockArguments #-}
 
-module Maze(Maze,Coord,updateMaze,generateLeaves,Directions(..),goToNeighbor) where
+module Maze(Maze,Coord,updateMaze,Directions(..),generateLeaves,goToNeighbor) where
 
-import System.Random ( randomRIO )
-import Control.Monad (replicateM)
-import Data.List (findIndex)
+import System.Random (randomRIO)
+import System.IO.Unsafe (unsafePerformIO)
 
-import Map(mazeMap,Cell(..))
+import Map(Cell(..))
 
 type Maze = [[Cell]]
 type Coord = (Int,Int)
@@ -36,22 +35,25 @@ updateMaze maze (x,y) cll = a ++ [l ++ cll:r] ++ b
         (a,row:b)  = splitAt x maze
         (l,col:r)  = splitAt y row
 
-numberOfLeaves :: Int
-numberOfLeaves = 5
-
-generateLeaf :: Maze -> IO Coord
+generateLeaf :: Maze -> Coord
 generateLeaf maze = do
-    let (x:xs)  = maze
+    let (k:ks)  = maze
         numRows = length maze
-        numCols = length x
-    x <- randomRIO (1, numRows - 1)
-    y <- randomRIO (1, numCols - 1)
+        numCols = length k
+        x = unsafePerformIO $ randomRIO (1, numRows - 1)
+        y = unsafePerformIO $ randomRIO (1, numCols - 1)
     if maze !! x !! y == Path
-        then return (x, y)
+        then (x, y)
         else generateLeaf maze
 
-generateLeaves :: Maze -> IO [Coord]
-generateLeaves maze = Control.Monad.replicateM numberOfLeaves (generateLeaf maze)
+generateLeaves :: Maze -> [Coord] -> Int -> [Coord]
+generateLeaves maze leaves ll
+    | ll == 0 = leaves
+    | otherwise =
+        let newLeaf = generateLeaf maze
+        in if newLeaf `elem` leaves
+            then generateLeaves maze leaves ll
+            else generateLeaves maze (newLeaf:leaves) (ll-1)
 
 goToNeighbor :: Maze -> Coord -> Directions -> Coord
 goToNeighbor maze (x,y) dir =

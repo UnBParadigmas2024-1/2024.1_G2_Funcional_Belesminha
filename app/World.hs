@@ -5,30 +5,15 @@ module World where
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
     (Event(EventKey),Key(SpecialKey),KeyState(Down,Up),SpecialKey(KeyRight,KeyUp,KeyDown,KeyLeft),Key(Char))
+import Data.List (minimumBy)
+import Data.Function (on)
+import Data.Maybe (fromJust)
 
 import Map (mazeMap,cellSize,cellToPicture,Cell(..))
-import Maze (Maze,Coord,updateMaze,Coord,Directions(..),goToNeighbor)
-import Data.Foldable (Foldable(length))
+import Maze (Maze,Coord,updateMaze,Directions(..),goToNeighbor,generateLeaves)
+import Dijkstra (calculateFullPath,permutation)
 
 data PlayState = Playing | GameOver | GameWon deriving (Eq)
-
-initializeWorld :: [Coord] -> IO World
-initializeWorld leavesList = do
-    let initialMaze = mazeMap
-        leaves = leavesList
-    let mazeWithLeaves = foldl (\mz (x,y) -> updateMaze mz (x,y) Leaf) initialMaze leaves
-        newWorld = World {
-            worldMap  = mazeWithLeaves,
-            endPos    = (23, 17),
-            startPos  = (1, 1),
-            playerPos = (1, 1),
-            moveCount = 0,
-            playingState = Playing,
-            listOfCurrentPlayerPositions = [(1, 1)],
-            maxSteps = 0,
-            leafCount = length leavesList
-        }
-    return newWorld
 
 data World where
   World :: { worldMap :: Maze, 
@@ -39,7 +24,8 @@ data World where
         playingState :: PlayState,
         listOfCurrentPlayerPositions :: [Coord],
         maxSteps :: Int,
-        leafCount :: Int
+        leafCount :: Int,
+        minSteps :: [Coord]
         } -> World
 
 updateWorld :: Float -> World -> World
@@ -107,24 +93,55 @@ incrementLeafCount maze (x1,y1) (x2,y2)
     | otherwise = 0
 
 handleInput :: Event -> World -> World
+handleInput (EventKey (Char 'r') Down _ _) world = initializeWorld
 handleInput ev world
     | maxSteps world == 0 = world { playingState = GameOver } -- Verifica se o número máximo de passos é 0 e atualiza o estado do jogo para GameOver
     | otherwise =
         world { worldMap = newMap', playerPos = newPos, moveCount = stepsTaken + increase, listOfCurrentPlayerPositions = listOfCurrentPlayerPositions', maxSteps = maxSteps world, leafCount = increaseLeaf + leavesTaken }
-    where
-        
-        map = worldMap world
-        plPos = playerPos world
-        stepsTaken = moveCount world
-        dir = changeDirection ev
-        --leaves' = if dir == Restart then generateLeaves map else  map
-        --newMap = if dir == Restart then initializeWorld leaves' else updateMaze map plPos Path
-        newMap = updateMaze map plPos Path
-        newPos = goToNeighbor map plPos dir
-        newMap' = updateMaze newMap newPos Start
-        increase = incrementStep plPos newPos
+        where
+            map = worldMap world
+            plPos = playerPos world
+            stepsTaken = moveCount world
+            dir = changeDirection ev
+            newMap = updateMaze map plPos Path
+            newPos = goToNeighbor map plPos dir
+            newMap' = updateMaze newMap newPos Start
+            increase = incrementStep plPos newPos
 
-        leavesTaken = leafCount world
-        increaseLeaf = incrementLeafCount newMap plPos newPos
+            leavesTaken = leafCount world
+            increaseLeaf = incrementLeafCount newMap plPos newPos
 
-        listOfCurrentPlayerPositions' = if newPos == plPos then listOfCurrentPlayerPositions world else listOfCurrentPlayerPositions world ++ [newPos]
+            listOfCurrentPlayerPositions' = if newPos == plPos then listOfCurrentPlayerPositions world else listOfCurrentPlayerPositions world ++ [newPos]
+
+numberOfLeaves :: Int
+numberOfLeaves = 5
+
+initializeWorld :: World
+initializeWorld = do
+    let initialMaze = mazeMap
+        leavesList = generateLeaves initialMaze [] numberOfLeaves
+        mazeWithLeaves = foldl (\mz (x,y) -> updateMaze mz (x,y) Leaf) initialMaze leavesList
+        newWorld = World {
+            worldMap  = mazeWithLeaves,
+            endPos    = (23, 17),
+            startPos  = (1, 1),
+            playerPos = (1, 1),
+            moveCount = 0,
+            playingState = Playing,
+            listOfCurrentPlayerPositions = [(1, 1)],
+            leafCount = length leavesList,
+            minSteps = [],
+            maxSteps = 0
+        }
+        newWorld' = calculateMinSteps newWorld leavesList initialMaze
+      in newWorld'
+
+calculateMinSteps :: World -> [Coord] -> Maze -> World
+calculateMinSteps world leaves maze =
+    let fpermutations = permutation leaves
+        startPos' = startPos world
+        endPos' = endPos world
+        allPaths = map (\fruitPermut -> calculateFullPath startPos' fruitPermut endPos' maze) fpermutations
+        allPaths' = map fromJust allPaths
+        minPath = minimumBy (compare `on` length) allPaths'
+        in world { minSteps = minPath, maxSteps = (length minPath - 1) }
