@@ -8,6 +8,7 @@ import Graphics.Gloss.Interface.Pure.Game
 
 import Map (mazeMap,cellSize,cellToPicture,Cell(..))
 import Maze (Maze,Coord,updateMaze,Coord,Directions(..),goToNeighbor)
+import Data.Foldable (Foldable(length))
 
 data PlayState = Playing | GameOver | GameWon deriving (Eq)
 
@@ -23,7 +24,8 @@ initializeWorld leavesList = do
             playerPos = (1, 1),
             moveCount = 0,
             playingState = Playing,
-            listOfCurrentPlayerPositions = [(1, 1)]
+            listOfCurrentPlayerPositions = [(1, 1)],
+            maxSteps = 0
         }
     return newWorld
 
@@ -34,21 +36,27 @@ data World where
         playerPos :: Coord,
         moveCount :: Int,
         playingState :: PlayState,
-        listOfCurrentPlayerPositions :: [Coord]
+        listOfCurrentPlayerPositions :: [Coord],
+        maxSteps :: Int
         } -> World
 
 updateWorld :: Float -> World -> World
 updateWorld time world 
+    | maxStepsReached = world { playingState = GameOver }  -- Verifica se o número máximo de passos foi atingido e atualiza o estado do jogo para GameOver
     | playerPosition == endPosition = world { playingState = GameWon }
     | otherwise = world
     where
         playerPosition = playerPos world
         endPosition = endPos world
+        maxStepsReached = moveCount world >= maxSteps world
+
+drawGameOverText :: Picture
+drawGameOverText = Translate  100 (-60) $ Scale 0.4 0.4 $ Color white $ Text "GAME OVER"
 
 
 mazeToPicture :: [Coord] -> World -> Picture
 mazeToPicture minSteps world =
-    let maze = worldMap world
+    let maze = worldMap world 
         xa =  map(\(x, y) -> y) minSteps
         yb = map(\(x, y) -> 24-x) minSteps
         xp = map(\(x, y) -> y) (listOfCurrentPlayerPositions world)
@@ -58,15 +66,22 @@ mazeToPicture minSteps world =
         playerPath = pictures [translate (fromIntegral x * cellSize) (fromIntegral y * cellSize) (color (makeColor 1 0 0 0.1) $ rectangleSolid cellSize cellSize) | (x, y) <- zip xp yp]
     in if playingState world == GameWon
         then translate (-240) (-225) . pictures $
-                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y,  row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [minStepsPictures] ++ [drawStepCount (moveCount world)] ++ [playerPath]
-       else if playingState world == Playing
-        then translate (-240) (-225) . pictures $
-                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y,  row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [drawStepCount (moveCount world)] ++ [playerPath]
-       else translate (-240) (-225) . pictures $
-                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y,  row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] 
+                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [minStepsPictures] ++ [drawStepCount (moveCount world)] ++ [drawMaxSteps (maxSteps world - moveCount world)] ++ [playerPath]
+        else if playingState world == Playing
+            then translate (-240) (-225) . pictures $
+                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [drawStepCount (moveCount world)]  ++ [drawMaxSteps (maxSteps world - moveCount world)] ++ [playerPath]
+        else if playingState world == GameOver
+            then translate (-240) (-225) . pictures $
+                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [drawGameOverText] ++ [minStepsPictures] ++ [playerPath]
+        else translate (-240) (-225) . pictures $
+                                    [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ]
+  
 
 drawStepCount :: Int -> Picture
-drawStepCount n = Translate (0) (-40) $ Scale 0.3 0.3 $ Color white $ Text $ "STEPS: " ++ show n
+drawStepCount n = Translate (0) (-40) $ Scale 0.3 0.3 $ Color white $ Text $ "STEPS: " ++ show n 
+
+drawMaxSteps :: Int -> Picture
+drawMaxSteps n = Translate (0) (-40) $ Scale 0.2 0.2 $ Color white $ Text $ "               MAX STEPS: " ++ show n
 
 changeDirection :: Event -> Directions
 changeDirection (EventKey (SpecialKey KeyDown) Down _ _)  = ToDown
@@ -81,9 +96,12 @@ incrementStep (x1,y1) (x2,y2)
     | otherwise = 1
 
 handleInput :: Event -> World -> World
-handleInput ev world =
-    world { worldMap = newMap', playerPos = newPos, moveCount = stepsTaken+increase, listOfCurrentPlayerPositions = listOfCurrentPlayerPositions'}
+handleInput ev world
+    | maxSteps world == 0 = world { playingState = GameOver } -- Verifica se o número máximo de passos é 0 e atualiza o estado do jogo para GameOver
+    | otherwise =
+        world { worldMap = newMap', playerPos = newPos, moveCount = stepsTaken + increase, listOfCurrentPlayerPositions = listOfCurrentPlayerPositions', maxSteps = maxSteps world }
     where
+        
         map = worldMap world
         plPos = playerPos world
         stepsTaken = moveCount world
