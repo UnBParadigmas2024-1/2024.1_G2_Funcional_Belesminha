@@ -24,26 +24,34 @@ menuBackgroundColor = white
 menuDrawing :: Picture
 menuDrawing = Circle 80
 
-newGame :: Picture
-newGame = translate (-85) (-10) $ textWithSize 20 "Novo Jogo"
+newGame :: Bool -> Picture
+newGame isSelected 
+        | isSelected = pictures [selectedEntryBox, color white (translate (-85) (-10) $ textWithSize 10 "Novo Jogo")]
+        | otherwise = pictures [color white (translate (-85) (-10) $ textWithSize 10 "Novo Jogo")]
 
-instructions :: Picture
-instructions = Text "Instruções"
+instructions :: Bool -> Picture
+instructions isSelected 
+        | isSelected = pictures [selectedEntryBox, color white (translate (-85) (-10) $ textWithSize 10 "Instrucoes")]
+        | otherwise = pictures [color white (translate (-85) (-10) $ textWithSize 10 "Instrucoes")]
 
-score :: Picture
-score = Text "Placar"
+score :: Bool -> Picture
+score isSelected 
+        | isSelected = pictures [selectedEntryBox, color white (translate (-85) (-10) $ textWithSize 10 "Placar")]
+        | otherwise = pictures [color white (translate (-85) (-10) $ textWithSize 10 "Placar")]
+
+quit :: Bool -> Picture
+quit isSelected 
+        | isSelected = pictures [selectedEntryBox, color white (translate (-85) (-10) $ textWithSize 10 "Sair")]
+        | otherwise = pictures [color white (translate (-85) (-10) $ textWithSize 10 "Sair")]
 
 selectedEntryBox :: Picture
-selectedEntryBox = color blue $ rectangleSolid 500.0 100.0
-
-quit :: Picture
-quit = Text "Sair"
+selectedEntryBox = color blue $ rectangleSolid 500.0 50.0
 
 textWithSize :: Int -> String -> Picture
 textWithSize fontSize text = Scale 0.3 0.3 $ Text text
 
-menuEntry :: MenuEntry -> MenuEntryState  -> Picture
-menuEntry NewGame Selected = Pictures [selectedEntryBox, color white newGame]
-menuEntry NewGame Idle = newGame
+-- menuEntry :: MenuEntry -> MenuEntryState  -> Picture
+-- menuEntry NewGame Selected = Pictures [selectedEntryBox, color white newGame]
+-- menuEntry NewGame Idle = newGame
 
 

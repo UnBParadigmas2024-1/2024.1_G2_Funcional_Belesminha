@@ -5,7 +5,7 @@ import Dijkstra (calculateMinSteps)
 import Maze (generateLeaves)
 import Map (mazeMap)
 import Graphics.Gloss.Interface.IO.Game (playIO)
-import MenuButtons (menuWindow, menuBackgroundColor, menuDrawing, menuEntry, MenuEntry (NewGame), MenuEntryState (Selected)) 
+import MenuButtons (menuWindow, menuBackgroundColor, menuDrawing, MenuEntry (NewGame), MenuEntryState (Selected)) 
 import Graphics.Gloss.Interface.IO.Display (displayIO)
 import MenuStates
 
@@ -22,10 +22,10 @@ main = do
 
   play
     windowDisplay
-    white
+    black
     60
     initialState
-    renderBasic
+    renderMenu
     handleEvent
     update
   

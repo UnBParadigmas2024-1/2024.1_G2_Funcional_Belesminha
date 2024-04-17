@@ -1,13 +1,33 @@
 module MenuStates where
 
 import Graphics.Gloss.Interface.IO.Game
-
+import MenuButtons
 
 newtype MenuState = MenuState { selectedOption :: Int }
 
 initialState :: MenuState
 initialState = MenuState 0
 
+
+renderMenu :: MenuState -> Picture
+renderMenu state = pictures
+    [ translate 0 50 (
+            if selectedOption state == 0 then newGame True
+            else newGame False
+        )
+    , translate 0 0 (
+            if selectedOption state == 1 then instructions True
+            else instructions False
+        )
+    , translate 0 (-50) (
+            if selectedOption state == 2 then score True
+            else score False
+        )
+    ,  translate 0 (-100) (
+            if selectedOption state == 3 then quit True
+            else quit False
+        )
+    ]
 
 
 renderBasic :: MenuState -> Picture
