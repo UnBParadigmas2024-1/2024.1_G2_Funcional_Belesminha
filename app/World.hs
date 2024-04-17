@@ -4,7 +4,7 @@ module World where
 
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
-    (Event(EventKey),Key(SpecialKey),KeyState(Down,Up),SpecialKey(KeyRight,KeyUp,KeyDown,KeyLeft))
+    (Event(EventKey),Key(SpecialKey),KeyState(Down,Up),SpecialKey(KeyRight,KeyUp,KeyDown,KeyLeft),Key(Char))
 
 import Map (mazeMap,cellSize,cellToPicture,Cell(..))
 import Maze (Maze,Coord,updateMaze,Coord,Directions(..),goToNeighbor)
@@ -116,9 +116,10 @@ handleInput ev world
         map = worldMap world
         plPos = playerPos world
         stepsTaken = moveCount world
-        newMap = updateMaze map plPos Path
-        
         dir = changeDirection ev
+        --leaves' = if dir == Restart then generateLeaves map else  map
+        --newMap = if dir == Restart then initializeWorld leaves' else updateMaze map plPos Path
+        newMap = updateMaze map plPos Path
         newPos = goToNeighbor map plPos dir
         newMap' = updateMaze newMap newPos Start
         increase = incrementStep plPos newPos
