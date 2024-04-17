@@ -1,32 +1,31 @@
-import Graphics.Gloss
-import World (mazeToPicture, handleInput, initializeWorld, updateWorld, moveCount)
 import Dijkstra (calculateMinSteps)
-import Maze (generateLeaves)
+import Graphics.Gloss
 import Map (mazeMap)
+import Maze (generateLeaves)
 import Ranking (showRanking, writeRanking)
-
+import World (World (..), handleInput, initializeWorld, mazeToPicture, updateWorld)
 
 main :: IO ()
 main = do
-    -- Mostrar o ranking antes de iniciar o jogo
-    showRanking "ranking.txt"
-    _ <- getLine
+  -- Mostrar o ranking antes de iniciar o jogo
+  showRanking "ranking.txt"
+  _ <- getLine
 
+  let initialMaze = mazeMap
 
-    let initialMaze = mazeMap
+  leaves <- generateLeaves initialMaze
+  newWorld' <- initializeWorld leaves
+  minSteps <- calculateMinSteps newWorld' leaves initialMaze
 
-    leaves <- generateLeaves initialMaze
-    newWorld <- initializeWorld leaves
-    minSteps <- calculateMinSteps newWorld leaves initialMaze
-
-    play
-        (InWindow "Belesminha" (600, 600) (0, 0))
-        black
-        60
-        newWorld
-        (mazeToPicture minSteps)
-        handleInput
-        updateWorld
+  let newWorld = newWorld' {maxSteps = length minSteps}
+  play
+    (InWindow "Belesminha" (1000, 1000) (0, 0))
+    black
+    60
+    newWorld
+    (mazeToPicture minSteps)
+    handleInput
+    updateWorld
     
-    -- Atualizar o ranking
-    writeRanking (moveCount newWorld)
+
+  writeRanking (moveCount newWorld)
