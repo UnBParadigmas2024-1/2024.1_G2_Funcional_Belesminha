@@ -19,7 +19,7 @@ main = do
   newWorld <- initializeWorld leaves
   minSteps <- calculateMinSteps newWorld leaves initialMaze
   
-  display menuWindow menuBackgroundColor menuEntry NewGame Selected
+  display menuWindow menuBackgroundColor (menuEntry NewGame Selected)
 
   -- displayIO menuWindow menuBackgroundColor menuEntries controllerSetRedraw 
 
@@ -34,11 +34,11 @@ main = do
     -- (InWindow "Belesminha: Menu principal" (600, 600) (100, 100))
      
   
-  play
-    (InWindow "Belesminha: Jogando" (600, 600) (0, 0))
-    black
-    60
-    newWorld
-    (mazeToPicture minSteps)
-    handleInput
-    updateWorld
+  -- play
+  --   (InWindow "Belesminha: Jogando" (600, 600) (0, 0))
+  --   black
+  --   60
+  --   newWorld
+  --   (mazeToPicture minSteps)
+  --   handleInput
+  --   updateWorld
