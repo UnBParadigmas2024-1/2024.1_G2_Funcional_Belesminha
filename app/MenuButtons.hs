@@ -26,26 +26,26 @@ menuDrawing = Circle 80
 
 newGame :: Bool -> Picture
 newGame isSelected 
-        | isSelected = pictures [selectedEntryBox, color white (translate (-85) (-10) $ textWithSize 10 "Novo Jogo")]
+        | isSelected = pictures [selectedEntryBox, color black (translate (-85) (-10) $ textWithSize 10 "Novo Jogo")]
         | otherwise = pictures [color white (translate (-85) (-10) $ textWithSize 10 "Novo Jogo")]
 
 instructions :: Bool -> Picture
 instructions isSelected 
-        | isSelected = pictures [selectedEntryBox, color white (translate (-85) (-10) $ textWithSize 10 "Instrucoes")]
+        | isSelected = pictures [selectedEntryBox, color black (translate (-85) (-10) $ textWithSize 10 "Instrucoes")]
         | otherwise = pictures [color white (translate (-85) (-10) $ textWithSize 10 "Instrucoes")]
 
 score :: Bool -> Picture
 score isSelected 
-        | isSelected = pictures [selectedEntryBox, color white (translate (-85) (-10) $ textWithSize 10 "Placar")]
+        | isSelected = pictures [selectedEntryBox, color black (translate (-85) (-10) $ textWithSize 10 "Placar")]
         | otherwise = pictures [color white (translate (-85) (-10) $ textWithSize 10 "Placar")]
 
 quit :: Bool -> Picture
 quit isSelected 
-        | isSelected = pictures [selectedEntryBox, color white (translate (-85) (-10) $ textWithSize 10 "Sair")]
+        | isSelected = pictures [selectedEntryBox, color black (translate (-85) (-10) $ textWithSize 10 "Sair")]
         | otherwise = pictures [color white (translate (-85) (-10) $ textWithSize 10 "Sair")]
 
 selectedEntryBox :: Picture
-selectedEntryBox = color blue $ rectangleSolid 500.0 50.0
+selectedEntryBox = color green $ rectangleSolid 500.0 50.0
 
 textWithSize :: Int -> String -> Picture
 textWithSize fontSize text = Scale 0.3 0.3 $ Text text

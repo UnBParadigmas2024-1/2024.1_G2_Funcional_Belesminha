@@ -8,9 +8,7 @@ import Graphics.Gloss.Interface.IO.Game (playIO)
 import MenuButtons (menuWindow, menuBackgroundColor, menuDrawing, MenuEntry (NewGame), MenuEntryState (Selected)) 
 import Graphics.Gloss.Interface.IO.Display (displayIO)
 import MenuStates
-
-windowDisplay :: Display
-windowDisplay = InWindow "Belesminha: Menu principal" (600, 600) (100, 100)
+import WindowConfig
 
 main :: IO ()
 main = do
@@ -20,37 +18,24 @@ main = do
   newWorld <- initializeWorld leaves
   minSteps <- calculateMinSteps newWorld leaves initialMaze
 
-  play
-    windowDisplay
-    black
-    60
-    initialState
-    renderMenu
-    handleEvent
-    update
-  
+  let menuPlay = play
+        (windowDisplay MenuWindow)
+        black
+        60
+        initialState
+        (renderMenu . menuState)
+        handleEvent
+        update
 
+  let gamePlay = play
+        (windowDisplay GameWindow)
+        black
+        60
+        newWorld
+        (mazeToPicture minSteps)
+        handleInput
+        updateWorld
 
-  -- display menuWindow menuBackgroundColor (menuEntry NewGame Selected)
-
-  -- displayIO menuWindow menuBackgroundColor menuEntries controllerSetRedraw 
-
-  -- playIO 
-  --   (InWindow "Belesminha: Menu principal" (600, 600) (100, 100))
-  --   black
-  --   60
-  --   newWorld
-  --   (mazeToPicture minSteps)
-  --   handleInput
-  --   updateWorld
-    -- (InWindow "Belesminha: Menu principal" (600, 600) (100, 100))
-     
-  
-  -- play
-  --   (InWindow "Belesminha: Jogando" (600, 600) (0, 0))
-  --   black
-  --   60
-  --   newWorld
-  --   (mazeToPicture minSteps)
-  --   handleInput
-  --   updateWorld
+  case gameState initialState of
+    MainMenu -> menuPlay
+    Game -> gamePlay
