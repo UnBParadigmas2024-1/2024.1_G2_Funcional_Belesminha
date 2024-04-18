@@ -86,7 +86,7 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 |Arthur Sena|||
 |Eric Chagas de Oliveira|||
 |Fernando Vargas|- Criação do mapa fixo do labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Refatorações de funções com o objetivo de seguir as convenções da comunidade do Haskell| Boa |
-|Gabriel Luiz|190013354|
+|Gabriel Luiz|- Implementação da validação que impede o usuário de ultrapassar paredes <br/> - Implementação do contador de folhas comidas <br/> - Implementação da funcionalidade de reiniciar o jogo (finalizada pelo Victor)| Boa
 |Guilherme Daniel Fernandes da Silva|||
 |Kevin Luis|||
 |Matheus Monteiro|||
