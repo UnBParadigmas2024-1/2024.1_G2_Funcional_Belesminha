@@ -95,10 +95,23 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 
 ## Outros 
 Quaisquer outras informações sobre o projeto podem ser descritas aqui. Não esqueça, entretanto, de informar sobre:
-(i) Lições Aprendidas;
-(ii) Percepções;
-(iii) Contribuições e Fragilidades, e
-(iV) Trabalhos Futuros.
+
+## Lições Aprendidas;
+
+## Percepções;
+
+## Contribuições e Fragilidades, e
+
+## Trabalhos Futuros
+
+Para trabalhos futuros, utilizando o Belesminha como base, sugere-se como ideias:
+
+- Criar novos mapas ao jogo, deixando com que o usuário possa escolher qual mapa ele deseja jogar;
+- Criar novas dificuldades de jogo, mudando quantos passos mínimos são oferecidos para o jogador;
+- Inserir predadores (inimigos) que perseguem a Belesminha;
+- Adicionar tipos de Célula que aceleram ou desaceleram o movimento da Belesminha;
+- Implementar um ranking de melhor pontuação, e
+- Adicionar outros items para serem utilizados pela Belesminha além das frutas/folhas.
 
 ## Fontes
 Inspiração:
