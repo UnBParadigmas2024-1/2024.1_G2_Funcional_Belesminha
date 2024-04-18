@@ -96,17 +96,25 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 |Thiago Vivan Bastos|- Ajuda na implementação do movimento e restrições dele <br/> - Ajuda na Implementação do reset do jogo <br/> - Ajuda na resolução de branchs coflituosas <br/> Tentativas de resolver conflitos entre a branch main e menu| Boa |
 |Victor Buendia|- Criação dos tipos de dados para labirinto <br/> - Criação do mapa fixo do labirinto <br/> - Cria função de checagem se ponto faz parte do limite do labirinto <br/> - Criação do tipo de dados e dinâmica de direção no labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Exibição do caminho ideal na tela <br/> - Contador de passos do usuário e impressão na tela <br/> - Impressão do caminho/rastro do usuário à medida que se move <br/> - Ajuda na implementação da movimentação do player <br/> - Implementação do Gloss no projeto <br/> - Criação da Makefile para instalação e compilação do projeto <br/> Reset do jogo |Excelente|
 
-## Lições Aprendidas
+## Outros
+
+### Lições Aprendidas
 
 - O Haskell, por ser um paradigma funcional, quando não utiliza IO, gera sempre um mesmo resultado (saída) para uma mesma entrada nas funções;
 - A modularidade no projeto precisa ser bem pensada para que os *imports* do projeto não tenham dependência circular, e
 - Participar ativamente do desenvolvimento do projeto é importante para entender o que ele faz, já que as variáveis possuem nomes que não são intuitivos.
 
-## Percepções
+### Percepções
 
-## Contribuições e Fragilidades
+### Contribuições e Fragilidades
 
-## Trabalhos Futuros
+- Contribuições
+    - Implementamos o labirinto e um jogo funcional, ainda que não completo;
+- Fragilidades
+    - Haskell não ter variáveis;
+    - Dificuldade em se adaptar ao novo paradigma de programação;
+
+### Trabalhos Futuros
 
 Para trabalhos futuros, utilizando o Belesminha como base, sugere-se como ideias:
 
