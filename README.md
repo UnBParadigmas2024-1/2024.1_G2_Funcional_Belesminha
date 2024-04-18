@@ -90,7 +90,7 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 |Guilherme Daniel Fernandes da Silva|||
 |Kevin Luis|- Criação do mapa fixo do labirinto <br/> - Implementação da detecção de eventos do teclado (Primeira versão) <br/> - Algoritmos de geração de folhas e Impressão de folhas no mapa<br/> - Tentativa de implementar ranking com leitura e escrita de arquivo (as funcões estão prontas e funcionando na branch `feat/history`, porém ocorreu um problema na integração com o gloss)|Boa|
 |Matheus Monteiro|||
-|Thiago Vivan Bastos|||
+|Thiago Vivan Bastos|- Ajuda na implementação do movimento e restrições dele <br/> - Ajuda na Implementação do reset do jogo <br/> - Ajuda na resolução de branchs coflituosas <br/> Tentativas de resolver conflitos entre a branch main e menu| Boa |
 |Victor Buendia|- Criação dos tipos de dados para labirinto <br/> - Criação do mapa fixo do labirinto <br/> - Cria função de checagem se ponto faz parte do limite do labirinto <br/> - Criação do tipo de dados e dinâmica de direção no labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Exibição do caminho ideal na tela <br/> - Contador de passos do usuário e impressão na tela <br/> - Impressão do caminho/rastro do usuário à medida que se move <br/> - Ajuda na implementação da movimentação do player <br/> - Implementação do Gloss no projeto <br/> - Criação da Makefile para instalação e compilação do projeto <br/> Reset do jogo |Excelente|
 
 ## Outros 
