@@ -106,6 +106,14 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 
 ### Percepções
 
+- Dificuldade com a sintaxe da linguagem.
+- O grupo teve dificuldade em se adaptar ao paradigma funcional.
+- Percepção de que a fluidez no uso do paradigma vem ao atingir uma curva de aprendizado alta.
+- Dificuldade em trabalhar com variáveis imultáveis.
+- Desafio quanto ao uso do paradigma dentro do contexto do projeto.
+- A organização dos módulos foi um desafio, onde não se teve a oportunidade de verificar se há outras formas de organização de código mais adequadas.
+- Importância dos tipos de dados customizáveis para melhor uso do paradigma.
+
 ### Contribuições e Fragilidades
 
 - Contribuições
