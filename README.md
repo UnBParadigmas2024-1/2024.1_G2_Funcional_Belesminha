@@ -85,7 +85,7 @@ TEMPO: +/- 15min
 Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 |Nome do Membro | Contribuição | Significância da Contribuição para o Projeto (Excelente/Boa/Regular/Ruim/Nula) |
 | -- | -- | -- |
-|Ailton Aires|||
+|Ailton Aires| - Desenvolvimento completo do algoritmo de Dijkstra adaptado ao contexto do projeto, que exige que o algoritmo seja rodado entre vários pontos para que ache o caminho final, passando por todas as folhas. <br/> - Recursão utilizada para calcular o caminho até cada coordenada e, em seguida, concatena os caminhos intermediários para formar o caminho completo. <br/> - Permutação da lista de coordenadas das folhas utilizando recursão. <br/> - Implementação do Game Over <br/> - Cálculo do Max Steps apresentado na tela e que é decrementado conforme o usuário percorre o caminho. <br/>  - Caso onde o usuário não consegue colher todas as folhas e chegar até o final, sendo apresentada a mensagem de Game Over e o desenho do melhor caminho no labirinto (que o usuário poderia fazer para coletar todas as folhas e chegar até o final). |Excelente|
 |Arthur Sena| - Randomização da Adição de Folhas no Mapa <br/> - Impressão das folhas no mapa <br/> - Função de restart do jogo através de evento do teclado |Boa|
 |Eric Chagas de Oliveira|||
 |Fernando Vargas|- Criação do mapa fixo do labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Refatorações de funções com o objetivo de seguir as convenções da comunidade do Haskell| Boa |
