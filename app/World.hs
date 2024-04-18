@@ -69,7 +69,7 @@ drawStepCount :: Int -> Picture
 drawStepCount n = Translate (0) (-40) $ Scale 0.3 0.3 $ Color white $ Text $ "STEPS: " ++ show n 
 
 drawMaxSteps :: Int -> Picture
-drawMaxSteps n = Translate (-80) (-40) $ Scale 0.2 0.2 $ Color white $ Text $ "               MAX STEPS: " ++ show n
+drawMaxSteps n = Translate (-80) (-40) $ Scale 0.3 0.3 $ Color white $ Text $ "AVAILABLE STEPS: " ++ show n
 
 drawLeafCount :: Int -> Picture
 drawLeafCount n = Translate (0) (-100) $ Scale 0.3 0.3 $ Color white $ Text $ "LEAFS: " ++ show n
