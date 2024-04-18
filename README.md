@@ -24,7 +24,10 @@ Use referências, links, que permitam conhecer um pouco mais sobre o projeto.
 Capriche nessa seção, pois ela é a primeira a ser lida pelos interessados no projeto.
 
 ## Screenshots
-Adicione 2 ou mais screenshots do projeto em termos de interface e/ou funcionamento.
+
+![Gameplay](./assets/gameplay.gif)
+
+![Belesminha](./assets/belesminha.png)
 
 ## Instalação 
 **Linguagens**: Haskell<br>
@@ -87,20 +90,21 @@ Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 |Eric Chagas de Oliveira|||
 |Fernando Vargas|- Criação do mapa fixo do labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Refatorações de funções com o objetivo de seguir as convenções da comunidade do Haskell| Boa |
 |Gabriel Luiz|- Implementação da validação que impede o usuário de ultrapassar paredes <br/> - Implementação do contador de folhas comidas <br/> - Implementação da funcionalidade de reiniciar o jogo (finalizada pelo Victor)| Boa
-|Guilherme Daniel Fernandes da Silva|||
+|Guilherme Daniel Fernandes da Silva|-|-|
 |Kevin Luis|- Criação do mapa fixo do labirinto <br/> - Implementação da detecção de eventos do teclado (Primeira versão) <br/> - Algoritmos de geração de folhas e Impressão de folhas no mapa<br/> - Tentativa de implementar ranking com leitura e escrita de arquivo (as funcões estão prontas e funcionando na branch `feat/history`, porém ocorreu um problema na integração com o gloss)|Boa|
-|Matheus Monteiro|||
+|Matheus Monteiro|-|Nula|
 |Thiago Vivan Bastos|- Ajuda na implementação do movimento e restrições dele <br/> - Ajuda na Implementação do reset do jogo <br/> - Ajuda na resolução de branchs coflituosas <br/> Tentativas de resolver conflitos entre a branch main e menu| Boa |
 |Victor Buendia|- Criação dos tipos de dados para labirinto <br/> - Criação do mapa fixo do labirinto <br/> - Cria função de checagem se ponto faz parte do limite do labirinto <br/> - Criação do tipo de dados e dinâmica de direção no labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Exibição do caminho ideal na tela <br/> - Contador de passos do usuário e impressão na tela <br/> - Impressão do caminho/rastro do usuário à medida que se move <br/> - Ajuda na implementação da movimentação do player <br/> - Implementação do Gloss no projeto <br/> - Criação da Makefile para instalação e compilação do projeto <br/> Reset do jogo |Excelente|
 
-## Outros 
-Quaisquer outras informações sobre o projeto podem ser descritas aqui. Não esqueça, entretanto, de informar sobre:
+## Lições Aprendidas
 
-## Lições Aprendidas;
+- O Haskell, por ser um paradigma funcional, quando não utiliza IO, gera sempre um mesmo resultado (saída) para uma mesma entrada nas funções;
+- A modularidade no projeto precisa ser bem pensada para que os *imports* do projeto não tenham dependência circular, e
+- Participar ativamente do desenvolvimento do projeto é importante para entender o que ele faz, já que as variáveis possuem nomes que não são intuitivos.
 
-## Percepções;
+## Percepções
 
-## Contribuições e Fragilidades, e
+## Contribuições e Fragilidades
 
 ## Trabalhos Futuros
 
