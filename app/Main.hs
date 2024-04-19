@@ -1,13 +1,12 @@
 import Graphics.Gloss
-
-import World (mazeToPicture,handleInput,updateWorld,World(..),initializeWorld)
+import World (mazeToPicture,handleInput,updateWorld,World(..),initializeWorld, returnCurrentWindow)
 
 main :: IO ()
 main = do
   let newWorld = initializeWorld
       minStepsPath = minSteps newWorld
   play
-    (InWindow "Belesminha" (1000, 1000) (0, 0))
+    (returnCurrentWindow newWorld)
     black
     60
     newWorld
