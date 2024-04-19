@@ -25,6 +25,8 @@ Capriche nessa seção, pois ela é a primeira a ser lida pelos interessados no 
 
 ## Screenshots
 
+![Menu](./assets/belesminha_menu.gif)
+
 ![Gameplay](./assets/gameplay.gif)
 
 ![Belesminha](./assets/belesminha.png)
