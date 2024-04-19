@@ -40,10 +40,13 @@ titleBGBack :: Picture
 titleBGBack = color green $ rectangleSolid 400.0 100.0
 
 leafExample :: Picture
-leafExample = color red $ rectangleSolid 10.0 10.0
+leafExample = color orange $ rectangleSolid 10.0 10.0
+
+endingExample :: Picture
+endingExample = color red $ rectangleSolid 10.0 10.0
 
 instructionsText :: String -> Picture
-instructionsText text = color white $ (textWithSize 10 text)
+instructionsText text = color white $ (textInstructionsSize 10 text)
 
 newGame :: Bool -> Picture
 newGame isSelected 
@@ -70,6 +73,9 @@ selectedEntryBox = color green $ rectangleSolid 500.0 50.0
 
 textWithSize :: Int -> String -> Picture
 textWithSize fontSize text = Scale 0.3 0.3 $ Text text
+
+textInstructionsSize :: Int -> String -> Picture
+textInstructionsSize fontSize text = Scale 0.1 0.1 $ Text text
 
 textTitleSize :: Int -> String -> Picture
 textTitleSize fontSize text = Scale 0.2 0.2 $ Text text

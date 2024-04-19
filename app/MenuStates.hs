@@ -48,12 +48,18 @@
     renderInstructions :: Picture
     renderInstructions = pictures
         [ translate 0 200 (
-            pictures [translate (-130) (-8) $ instructionsText "Como jogar?"]
+            pictures [translate (-130) (-8) $ instructionsTitle "Como jogar?"]
         ) 
-        , translate 0 50 (
-                pictures [instructionsText "Seu objetivo é comer as folhas espalhadas pelo mapa. Elas se parecem com isso -> ", translate (-130) (-8) $ leafExample, instructionsText "Para se movimentar use as setas do teclado."]
+        , translate (-400) 30 (
+                pictures [ translate (0) (70) $ instructionsText "Voce eh a Belesminha ! Seu objetivo eh comer as folhas espalhadas pelo labirinto. Elas se parecem com isso -> ", translate (450+340) (73) $ leafExample]
             )
-        ,  translate (-160) (-280) (
+        , translate (-400) 0 (
+            pictures [ translate (0) (70) $ instructionsText "Para se movimentar use as setas do teclado, e tente chegar ao final do labirinto", translate (560) (73) $ endingExample, translate (576) (72) $ instructionsText "usando o menor numero de passos"]
+            )
+        , translate (-400) (-20) (
+            pictures [ translate (0) (70) $ instructionsText "possivel!"]
+        )
+        ,  translate (-300) (-280) (
                 quitText "Pressione V para voltar ao menu principal"
             )
         ]
