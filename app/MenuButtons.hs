@@ -27,6 +27,9 @@ menuDrawing = Circle 80
 mainTitle :: String -> Picture
 mainTitle text = color white (textTitleSize 10 text)
 
+quitText :: String -> Picture
+quitText text = color white (textTitleSize 10 text)
+
 titleBGFront :: Picture
 titleBGFront = color blue $ rectangleSolid 360.0 75.0
 

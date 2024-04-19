@@ -47,9 +47,8 @@
                 if selectedOption state == 2 then score True
                 else score False
             )
-        ,  translate 0 (-100) (
-                if selectedOption state == 3 then quit True
-                else quit False
+        ,  translate (-160) (-280) (
+                quitText "Pressione ESC para sair"
             )
         ]
 
