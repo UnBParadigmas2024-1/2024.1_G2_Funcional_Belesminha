@@ -4,30 +4,27 @@
     import MenuButtons
     import Map 
     import Maze
-    import World
     import Dijkstra
 
     newtype MenuSelectionState = MenuSelectionState { selectedOption :: Int }
-    data GameState = MainMenu | Game | Score | Instructions deriving Eq
+    data GameState = MainMenuState | Game | ScoreState | InstructionsState deriving Eq
 
     data State = State
-        { gameState :: GameState
-        , menuState :: MenuSelectionState
+        { 
+            gameState :: GameState,
+            menuState :: MenuSelectionState
         }
 
     -- Check if the gameState in State is Game
     isGameStateGame :: State -> Bool
     isGameStateGame state = gameState state == Game
 
-    instance Show GameState where
-    show Game = "Game" 
-
-    initialState :: State 
-    initialState = State MainMenu (MenuSelectionState 0)
+    initialState :: State
+    initialState = State MainMenuState (MenuSelectionState 0)
 
 
     render :: State -> Picture
-    render (State MainMenu menuState) = renderMenu menuState
+    render (State MainMenuState menuState) = renderMenu menuState
     -- render (State Game _) = calculateMinSteps (initializeWorld (generateLeaves mazeMap))
 
     renderMenu :: MenuSelectionState -> Picture

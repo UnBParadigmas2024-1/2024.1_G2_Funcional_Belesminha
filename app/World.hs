@@ -8,12 +8,14 @@ import Graphics.Gloss.Interface.Pure.Game
 import Data.List (minimumBy)
 import Data.Function (on)
 import Data.Maybe (fromJust)
-
+import Graphics.Gloss.Interface.IO.Game
 import Map (mazeMap,cellSize,cellToPicture,Cell(..))
 import Maze (Maze,Coord,updateMaze,Directions(..),goToNeighbor,generateLeaves)
 import Dijkstra (calculateFullPath,permutation)
+import WindowConfig 
+import MenuStates (renderMenu, menuState, MenuSelectionState (MenuSelectionState, selectedOption), handleEvent)
 
-data PlayState = Playing | GameOver | GameWon deriving (Eq)
+data PlayState = Playing | GameOver | GameWon | MainMenu | Instructions | Score deriving (Eq)
 
 data World where
   World :: { worldMap :: Maze, 
@@ -25,7 +27,8 @@ data World where
         listOfCurrentPlayerPositions :: [Coord],
         maxSteps :: Int,
         leafCount :: Int,
-        minSteps :: [Coord]
+        minSteps :: [Coord],
+        menuSelState :: MenuSelectionState
         } -> World
 
 updateWorld :: Float -> World -> World
@@ -41,6 +44,14 @@ updateWorld time world
 drawGameOverText :: Picture
 drawGameOverText = Translate  100 (-60) $ Scale 0.4 0.4 $ Color white $ Text "GAME OVER"
 
+returnCurrentWindow :: World -> Display
+returnCurrentWindow world = windowController (playingState world)
+
+windowController :: PlayState -> Display
+windowController Playing = windowDisplay GameWindow
+windowController MainMenu = windowDisplay MenuWindow
+windowController Instructions = windowDisplay InstructionsWindow
+windowController Score = windowDisplay ScoreWindow
 
 mazeToPicture :: [Coord] -> World -> Picture
 mazeToPicture minSteps world =
@@ -61,9 +72,10 @@ mazeToPicture minSteps world =
         else if playingState world == GameOver
             then translate (-240) (-225) . pictures $
                                     [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [drawGameOverText] ++ [minStepsPictures] ++ [playerPath]
+        else if playingState world == MainMenu
+            then renderMenu (menuSelState world)
         else translate (-240) (-225) . pictures $
                                     [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ]
-  
 
 drawStepCount :: Int -> Picture
 drawStepCount n = Translate (0) (-40) $ Scale 0.3 0.3 $ Color white $ Text $ "STEPS: " ++ show n 
@@ -96,7 +108,9 @@ handleInput :: Event -> World -> World
 handleInput (EventKey (Char 'r') Down _ _) world = initializeWorld
 handleInput ev world
     | maxSteps world == 0 = world { playingState = GameOver } -- Verifica se o número máximo de passos é 0 e atualiza o estado do jogo para GameOver
-    | otherwise =
+    | playingState world == MainMenu =
+        handleMenuEvent ev world
+    | otherwise = 
         world { worldMap = newMap', playerPos = newPos, moveCount = stepsTaken + increase, listOfCurrentPlayerPositions = listOfCurrentPlayerPositions', maxSteps = maxSteps world, leafCount = increaseLeaf + leavesTaken }
         where
             map = worldMap world
@@ -113,6 +127,16 @@ handleInput ev world
 
             listOfCurrentPlayerPositions' = if newPos == plPos then listOfCurrentPlayerPositions world else listOfCurrentPlayerPositions world ++ [newPos]
 
+handleMenuEvent :: Event -> World -> World
+handleMenuEvent (EventKey (SpecialKey KeyUp) Down _ _) world =
+    world { menuSelState = (menuSelState world) { selectedOption = (selectedOption (menuSelState world) - 1) `mod` 2 } }
+handleMenuEvent (EventKey (SpecialKey KeyDown) Down _ _) world =
+    world { menuSelState = (menuSelState world) { selectedOption = (selectedOption (menuSelState world) + 1) `mod` 2 } }
+handleMenuEvent (EventKey (SpecialKey KeyEnter) Down _ _) world
+    | selectedOption (menuSelState world) == 0 = world { playingState = Playing }  
+    | otherwise = world
+handleMenuEvent _ world = world
+
 numberOfLeaves :: Int
 numberOfLeaves = 5
 
@@ -127,11 +151,12 @@ initializeWorld = do
             startPos  = (1, 1),
             playerPos = (1, 1),
             moveCount = 0,
-            playingState = Playing,
+            playingState = MainMenu,
             listOfCurrentPlayerPositions = [(1, 1)],
             leafCount = length leavesList,
             minSteps = [],
-            maxSteps = 0
+            maxSteps = 0,
+            menuSelState = MenuSelectionState {selectedOption = 0}
         }
         newWorld' = calculateMinSteps newWorld leavesList initialMaze
       in newWorld'
