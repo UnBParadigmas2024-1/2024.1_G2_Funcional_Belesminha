@@ -24,6 +24,15 @@ menuBackgroundColor = white
 menuDrawing :: Picture
 menuDrawing = Circle 80
 
+mainTitle :: String -> Picture
+mainTitle text = color white (textTitleSize 10 text)
+
+titleBGFront :: Picture
+titleBGFront = color blue $ rectangleSolid 360.0 75.0
+
+titleBGBack :: Picture
+titleBGBack = color green $ rectangleSolid 400.0 100.0
+
 newGame :: Bool -> Picture
 newGame isSelected 
         | isSelected = pictures [selectedEntryBox, color black (translate (-85) (-10) $ textWithSize 10 "Novo Jogo")]
@@ -50,6 +59,8 @@ selectedEntryBox = color green $ rectangleSolid 500.0 50.0
 textWithSize :: Int -> String -> Picture
 textWithSize fontSize text = Scale 0.3 0.3 $ Text text
 
+textTitleSize :: Int -> String -> Picture
+textTitleSize fontSize text = Scale 0.2 0.2 $ Text text
 -- menuEntry :: MenuEntry -> MenuEntryState  -> Picture
 -- menuEntry NewGame Selected = Pictures [selectedEntryBox, color white newGame]
 -- menuEntry NewGame Idle = newGame

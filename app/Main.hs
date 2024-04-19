@@ -9,33 +9,37 @@ import MenuButtons (menuWindow, menuBackgroundColor, menuDrawing, MenuEntry (New
 import Graphics.Gloss.Interface.IO.Display (displayIO)
 import MenuStates
 import WindowConfig
+import MenuStates (initialState, State (gameState))
 
 main :: IO ()
 main = do
-  let initialMaze = mazeMap
+      let initialMaze = mazeMap
 
-  leaves <- generateLeaves initialMaze
-  newWorld <- initializeWorld leaves
-  minSteps <- calculateMinSteps newWorld leaves initialMaze
+      leaves <- generateLeaves initialMaze
+      newWorld <- initializeWorld leaves
+      minSteps <- calculateMinSteps newWorld leaves initialMaze
 
-  let menuPlay = play
-        (windowDisplay MenuWindow)
-        black
-        60
-        initialState
-        (renderMenu . menuState)
-        handleEvent
-        update
 
-  let gamePlay = play
-        (windowDisplay GameWindow)
-        black
-        60
-        newWorld
-        (mazeToPicture minSteps)
-        handleInput
-        updateWorld
+      let menuPlay = play
+            (windowDisplay MenuWindow)
+            black
+            60
+            initialState
+            (renderMenu . menuState)
+            handleEvent
+            update
 
-  case gameState initialState of
-    MainMenu -> menuPlay
-    Game -> gamePlay
+      let gamePlay = play
+            (windowDisplay GameWindow)
+            black
+            60
+            newWorld
+            (mazeToPicture minSteps)
+            handleInput
+            updateWorld
+      
+      if isGameStateGame initialState then
+            gamePlay
+            
+      else do
+            menuPlay 

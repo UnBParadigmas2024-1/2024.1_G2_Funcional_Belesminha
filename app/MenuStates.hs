@@ -2,6 +2,10 @@
 
     import Graphics.Gloss.Interface.IO.Game
     import MenuButtons
+    import Map 
+    import Maze
+    import World
+    import Dijkstra
 
     newtype MenuSelectionState = MenuSelectionState { selectedOption :: Int }
     data GameState = MainMenu | Game | Score | Instructions deriving Eq
@@ -11,16 +15,27 @@
         , menuState :: MenuSelectionState
         }
 
-    initialState :: State
+    -- Check if the gameState in State is Game
+    isGameStateGame :: State -> Bool
+    isGameStateGame state = gameState state == Game
+
+    instance Show GameState where
+    show Game = "Game" 
+
+    initialState :: State 
     initialState = State MainMenu (MenuSelectionState 0)
+
 
     render :: State -> Picture
     render (State MainMenu menuState) = renderMenu menuState
-    render (State Game _) = renderGame
+    -- render (State Game _) = calculateMinSteps (initializeWorld (generateLeaves mazeMap))
 
     renderMenu :: MenuSelectionState -> Picture
     renderMenu state = pictures
-        [  translate 0 50 (
+        [ translate 0 200 (
+            pictures [titleBGBack, titleBGFront, translate (-130) (-8) $ mainTitle "Belesminha: O Jogo"]
+        ) 
+        , translate 0 50 (
                 if selectedOption state == 0 then newGame True
                 else newGame False
             )
@@ -46,9 +61,8 @@
         state { menuState = (menuState state) { selectedOption = (selectedOption (menuState state) - 1) `mod` 4 } }
     handleEvent (EventKey (SpecialKey KeyDown) Down _ _) state =
         state { menuState = (menuState state) { selectedOption = (selectedOption (menuState state) + 1) `mod` 4 } }
-    -- Evento de pressionar enter no novo jogo (TODO: Atualizar o state para o jogo)
     handleEvent (EventKey (SpecialKey KeyEnter) Down _ _) state
-        | selectedOption (menuState state) == 0 = state { gameState = Game }
+        | selectedOption (menuState state) == 0 = state { gameState = Game }  
         | otherwise = state
     handleEvent _ state = state
 
