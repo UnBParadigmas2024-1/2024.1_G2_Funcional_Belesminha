@@ -40,12 +40,21 @@
                 if selectedOption state == 1 then instructions True
                 else instructions False
             )
-        , translate 0 (-50) (
-                if selectedOption state == 2 then score True
-                else score False
-            )
         ,  translate (-160) (-280) (
                 quitText "Pressione ESC para sair"
+            )
+        ]
+
+    renderInstructions :: Picture
+    renderInstructions = pictures
+        [ translate 0 200 (
+            pictures [translate (-130) (-8) $ instructionsText "Como jogar?"]
+        ) 
+        , translate 0 50 (
+                pictures [instructionsText "Seu objetivo é comer as folhas espalhadas pelo mapa. Elas se parecem com isso -> ", translate (-130) (-8) $ leafExample, instructionsText "Para se movimentar use as setas do teclado."]
+            )
+        ,  translate (-160) (-280) (
+                quitText "Pressione V para voltar ao menu principal"
             )
         ]
 

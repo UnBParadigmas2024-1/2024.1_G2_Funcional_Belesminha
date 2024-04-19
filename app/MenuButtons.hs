@@ -27,6 +27,9 @@ menuDrawing = Circle 80
 mainTitle :: String -> Picture
 mainTitle text = color white (textTitleSize 10 text)
 
+instructionsTitle :: String -> Picture
+instructionsTitle text = color white (textTitleSize 10 text)
+
 quitText :: String -> Picture
 quitText text = color white (textTitleSize 10 text)
 
@@ -35,6 +38,12 @@ titleBGFront = color blue $ rectangleSolid 360.0 75.0
 
 titleBGBack :: Picture
 titleBGBack = color green $ rectangleSolid 400.0 100.0
+
+leafExample :: Picture
+leafExample = color red $ rectangleSolid 10.0 10.0
+
+instructionsText :: String -> Picture
+instructionsText text = color white $ (textWithSize 10 text)
 
 newGame :: Bool -> Picture
 newGame isSelected 

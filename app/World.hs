@@ -13,7 +13,7 @@ import Map (mazeMap,cellSize,cellToPicture,Cell(..))
 import Maze (Maze,Coord,updateMaze,Directions(..),goToNeighbor,generateLeaves)
 import Dijkstra (calculateFullPath,permutation)
 import WindowConfig 
-import MenuStates (renderMenu, menuState, MenuSelectionState (MenuSelectionState, selectedOption), handleEvent)
+import MenuStates (renderMenu, renderInstructions, menuState, MenuSelectionState (MenuSelectionState, selectedOption), handleEvent)
 
 data PlayState = Playing | GameOver | GameWon | MainMenu | Instructions | Score deriving (Eq)
 
@@ -74,6 +74,8 @@ mazeToPicture minSteps world =
                                     [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ] ++ [drawGameOverText] ++ [minStepsPictures] ++ [playerPath]
         else if playingState world == MainMenu
             then renderMenu (menuSelState world)
+        else if playingState world == Instructions
+            then renderInstructions
         else translate (-240) (-225) . pictures $
                                     [ translate (x * cellSize) (y * cellSize) (cellToPicture cell) | (y, row) <- zip [0..] reversedMaze , (x, cell) <- zip [0..] row ]
 
@@ -110,6 +112,8 @@ handleInput ev world
     | maxSteps world == 0 = world { playingState = GameOver } -- Verifica se o número máximo de passos é 0 e atualiza o estado do jogo para GameOver
     | playingState world == MainMenu =
         handleMenuEvent ev world
+    | playingState world == Instructions =
+        handleInstructionsEvents ev world
     | otherwise = 
         world { worldMap = newMap', playerPos = newPos, moveCount = stepsTaken + increase, listOfCurrentPlayerPositions = listOfCurrentPlayerPositions', maxSteps = maxSteps world, leafCount = increaseLeaf + leavesTaken }
         where
@@ -134,8 +138,14 @@ handleMenuEvent (EventKey (SpecialKey KeyDown) Down _ _) world =
     world { menuSelState = (menuSelState world) { selectedOption = (selectedOption (menuSelState world) + 1) `mod` 2 } }
 handleMenuEvent (EventKey (SpecialKey KeyEnter) Down _ _) world
     | selectedOption (menuSelState world) == 0 = world { playingState = Playing }  
+    | selectedOption (menuSelState world) == 1 = world { playingState = Instructions }
     | otherwise = world
 handleMenuEvent _ world = world
+
+handleInstructionsEvents :: Event -> World -> World
+handleInstructionsEvents (EventKey (Char 'v') Down _ _) world =
+    world { menuSelState = (menuSelState world) { selectedOption = 0 }, playingState = MainMenu }
+handleInstructionsEvents _ world = world
 
 numberOfLeaves :: Int
 numberOfLeaves = 5
