@@ -79,8 +79,5 @@ textInstructionsSize fontSize text = Scale 0.1 0.1 $ Text text
 
 textTitleSize :: Int -> String -> Picture
 textTitleSize fontSize text = Scale 0.2 0.2 $ Text text
--- menuEntry :: MenuEntry -> MenuEntryState  -> Picture
--- menuEntry NewGame Selected = Pictures [selectedEntryBox, color white newGame]
--- menuEntry NewGame Idle = newGame
 
 
