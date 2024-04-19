@@ -24,7 +24,10 @@ Use referências, links, que permitam conhecer um pouco mais sobre o projeto.
 Capriche nessa seção, pois ela é a primeira a ser lida pelos interessados no projeto.
 
 ## Screenshots
-Adicione 2 ou mais screenshots do projeto em termos de interface e/ou funcionamento.
+
+![Gameplay](./assets/gameplay.gif)
+
+![Belesminha](./assets/belesminha.png)
 
 ## Instalação 
 **Linguagens**: Haskell<br>
@@ -82,23 +85,53 @@ TEMPO: +/- 15min
 Apresente, brevemente, como cada membro do grupo contribuiu para o projeto.
 |Nome do Membro | Contribuição | Significância da Contribuição para o Projeto (Excelente/Boa/Regular/Ruim/Nula) |
 | -- | -- | -- |
-|Ailton Aires|||
-|Arthur Sena|||
+|Ailton Aires| - Desenvolvimento completo do algoritmo de Dijkstra adaptado ao contexto do projeto, que exige que o algoritmo seja rodado entre vários pontos para que ache o caminho final, passando por todas as folhas. <br/> - Recursão utilizada para calcular o caminho até cada coordenada e, em seguida, concatena os caminhos intermediários para formar o caminho completo. <br/> - Permutação da lista de coordenadas das folhas utilizando recursão. <br/> - Implementação do Game Over <br/> - Cálculo do Max Steps apresentado na tela e que é decrementado conforme o usuário percorre o caminho. <br/>  - Caso onde o usuário não consegue colher todas as folhas e chegar até o final, sendo apresentada a mensagem de Game Over e o desenho do melhor caminho no labirinto (que o usuário poderia fazer para coletar todas as folhas e chegar até o final). |Excelente|
+|Arthur Sena| - Randomização da Adição de Folhas no Mapa <br/> - Impressão das folhas no mapa <br/> - Função de restart do jogo através de evento do teclado |Boa|
 |Eric Chagas de Oliveira|||
-|Fernando Vargas|||
-|Gabriel Luiz|190013354|
-|Guilherme Daniel Fernandes da Silva|||
-|Kevin Luis|||
-|Matheus Monteiro|||
-|Thiago Vivan Bastos|||
-|Victor Buendia|- Criação dos tipos de dados para labirinto <br/> - Criação do mapa fixo do labirinto <br/> - Cria função de checagem se ponto faz parte do limite do labirinto <br/> - Criação do tipo de dados e dinâmica de direção no labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Exibição do caminho ideal na tela <br/> - Contador de passos do usuário e impressão na tela <br/> - Impressão do caminho/rastro do usuário à medida que se move <br/> - Ajuda na implementação da movimentação do player <br/> - Implementação do Gloss no projeto <br/> - Criação da Makefile para instalação e compilação do projeto |Excelente|
+|Fernando Vargas|- Criação do mapa fixo do labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Refatorações de funções com o objetivo de seguir as convenções da comunidade do Haskell| Boa |
+|Gabriel Luiz|- Implementação da validação que impede o usuário de ultrapassar paredes <br/> - Implementação do contador de folhas comidas <br/> - Implementação da funcionalidade de reiniciar o jogo (finalizada pelo Victor)| Boa
+|Guilherme Daniel Fernandes da Silva|-|-|
+|Kevin Luis|- Criação do mapa fixo do labirinto <br/> - Implementação da detecção de eventos do teclado (Primeira versão) <br/> - Algoritmos de geração de folhas e Impressão de folhas no mapa<br/> - Tentativa de implementar ranking com leitura e escrita de arquivo (as funcões estão prontas e funcionando na branch `feat/history`, porém ocorreu um problema na integração com o gloss)|Boa|
+|Matheus Monteiro|-|Nula|
+|Thiago Vivan Bastos|- Ajuda na implementação do movimento e restrições dele <br/> - Ajuda na Implementação do reset do jogo <br/> - Ajuda na resolução de branchs coflituosas <br/> Tentativas de resolver conflitos entre a branch main e menu| Boa |
+|Victor Buendia|- Criação dos tipos de dados para labirinto <br/> - Criação do mapa fixo do labirinto <br/> - Cria função de checagem se ponto faz parte do limite do labirinto <br/> - Criação do tipo de dados e dinâmica de direção no labirinto <br/> - Tentativa de criar um DFS para gerar o labirinto (ideia abandonada) <br/> - Exibição do caminho ideal na tela <br/> - Contador de passos do usuário e impressão na tela <br/> - Impressão do caminho/rastro do usuário à medida que se move <br/> - Ajuda na implementação da movimentação do player <br/> - Implementação do Gloss no projeto <br/> - Criação da Makefile para instalação e compilação do projeto <br/> Reset do jogo |Excelente|
 
-## Outros 
-Quaisquer outras informações sobre o projeto podem ser descritas aqui. Não esqueça, entretanto, de informar sobre:
-(i) Lições Aprendidas;
-(ii) Percepções;
-(iii) Contribuições e Fragilidades, e
-(iV) Trabalhos Futuros.
+## Outros
+
+### Lições Aprendidas
+
+- O Haskell, por ser um paradigma funcional, quando não utiliza IO, gera sempre um mesmo resultado (saída) para uma mesma entrada nas funções;
+- A modularidade no projeto precisa ser bem pensada para que os *imports* do projeto não tenham dependência circular, e
+- Participar ativamente do desenvolvimento do projeto é importante para entender o que ele faz, já que as variáveis possuem nomes que não são intuitivos.
+
+### Percepções
+
+- Dificuldade com a sintaxe da linguagem.
+- O grupo teve dificuldade em se adaptar ao paradigma funcional.
+- Percepção de que a fluidez no uso do paradigma vem ao atingir uma curva de aprendizado alta.
+- Dificuldade em trabalhar com variáveis imultáveis.
+- Desafio quanto ao uso do paradigma dentro do contexto do projeto.
+- A organização dos módulos foi um desafio, onde não se teve a oportunidade de verificar se há outras formas de organização de código mais adequadas.
+- Importância dos tipos de dados customizáveis para melhor uso do paradigma.
+
+### Contribuições e Fragilidades
+
+- Contribuições
+    - Implementamos o labirinto e um jogo funcional, ainda que não completo;
+- Fragilidades
+    - Haskell não ter variáveis;
+    - Dificuldade em se adaptar ao novo paradigma de programação;
+
+### Trabalhos Futuros
+
+Para trabalhos futuros, utilizando o Belesminha como base, sugere-se como ideias:
+
+- Criar novos mapas ao jogo, deixando com que o usuário possa escolher qual mapa ele deseja jogar;
+- Criar novas dificuldades de jogo, mudando quantos passos mínimos são oferecidos para o jogador;
+- Inserir predadores (inimigos) que perseguem a Belesminha;
+- Adicionar tipos de Célula que aceleram ou desaceleram o movimento da Belesminha;
+- Implementar um ranking de melhor pontuação, e
+- Adicionar outros items para serem utilizados pela Belesminha além das frutas/folhas.
 
 ## Fontes
 Inspiração:
