@@ -137,3 +137,4 @@ Para trabalhos futuros, utilizando o Belesminha como base, sugere-se como ideias
 Inspiração:
 > https://github.com/UnBParadigmas2023-2/2023.2_G2_Funcional_EscapeFromCurry/tree/main
 > https://homepages.dcc.ufmg.br/~flavioro/belesminha/Artigo-Belesminha.pdf
+> https://homepages.dcc.ufmg.br/~flavioro/belesminha/regras.htm
